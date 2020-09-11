@@ -1,3 +1,6 @@
+/**
+ * @description 数据库添加文章 Article类
+ */
 export class IArticle {
     public articleID: number;
     public title?: string | undefined;

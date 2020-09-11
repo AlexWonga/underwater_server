@@ -1,3 +1,7 @@
+/**
+ * @description 设备实体类
+ */
+
 export class Device {
     public deviceID: number;//设备ID
     public manufacturerID: number;//厂商ID

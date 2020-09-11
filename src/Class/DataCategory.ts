@@ -1,5 +1,8 @@
 import {DataType} from "../Enum/DataType";
 
+/**
+ * @description 设备数据类型 实体类
+ */
 export class DataCategory {
     public dataCategoryID: number;
     public dataCategoryName: string;

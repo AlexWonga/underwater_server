@@ -1,5 +1,8 @@
 import {DeviceData} from "./DeviceData";
 
+/**
+ * @description 设备添加数据用 Device类
+ */
 export class IDevice{
     public deviceID:number;
     public deviceName:string|undefined;

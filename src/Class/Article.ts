@@ -1,5 +1,8 @@
 import {ArticleType} from "../Enum/ArticleType";
 
+/**
+ * @description 文章实体类
+ */
 export class Article {
     public articleID!: number;
     public articleType!: ArticleType;

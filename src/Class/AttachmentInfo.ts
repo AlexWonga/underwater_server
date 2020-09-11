@@ -1,3 +1,7 @@
+/**
+ * @description 返回数据 附件类
+ */
+
 export class AttachmentInfo {
     public fileName: string;
     public filePath: string;

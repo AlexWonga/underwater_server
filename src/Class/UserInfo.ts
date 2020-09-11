@@ -1,5 +1,8 @@
 import {UserType} from "../Enum/UserType";
 
+/**
+ * @description User实体类
+ * */
 export class UserInfo {
     public ID!: number;
     public username!: string;

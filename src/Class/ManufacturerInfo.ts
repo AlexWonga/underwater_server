@@ -1,3 +1,7 @@
+/**
+ * @description 厂商实体类
+ */
+
 export class ManufacturerInfo {
     public manufacturerID!: number;
     public manufacturerName!: string;

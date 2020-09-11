@@ -1,3 +1,7 @@
+/**
+ * @description 数据库添加数据用 User类
+ */
+
 export class IUser {
     ID: number;
     password?: string;

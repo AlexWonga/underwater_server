@@ -1,3 +1,7 @@
+/**
+ * @description 轮播图实体类
+ */
+
 export class SlidePicture {
     public slidePictureID: number;
     public slidePath: string;

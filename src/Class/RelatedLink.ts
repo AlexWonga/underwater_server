@@ -1,3 +1,6 @@
+/**
+ * @description 相关链接实体类
+ */
 export class RelatedLink {
     public link!: string;
     public linkName: string;
