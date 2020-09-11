@@ -7,6 +7,7 @@ import serve from "koa-static";
 import {logErr} from "./router/LogError";
 import {maxFileSize} from "./instances/maxFileSize";
 import {rootDirPath} from "./config/filePaths";
+import {rateLimiterMiddleware} from "./router/rateLimiter";
 
 const app = new Koa();
 //import SessionConfig from "./config/SessionConfig";
@@ -38,6 +39,7 @@ app.use(serve(
 ));
 
 app.use(logErr);
+app.use(rateLimiterMiddleware);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
