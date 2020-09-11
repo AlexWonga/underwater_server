@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "types": [
+      "koa-body",
+      "jest"
+    ],
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "outDir": "./dist",
+    "target": "es6",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    /* Report errors on unused locals. */
+    "noUnusedParameters": true,
+    /* Report errors on unused parameters. */
+    "noImplicitReturns": true,
+    /* Report error when not all code paths in function return a value. */
+    "noFallthroughCasesInSwitch": true,
+    /* Report errors for fallthrough cases in switch statement. */
+    //"strictNullChecks": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

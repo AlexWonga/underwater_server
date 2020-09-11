@@ -1,0 +1,5 @@
+export enum UserType {
+    SUPERVISOR = 'SUPERVISOR',
+    DEVICEADMIN = 'DEVICEADMIN',
+    BROWSEUSER = 'BROWSEUSER'
+}
