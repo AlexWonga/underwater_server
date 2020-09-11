@@ -2,6 +2,7 @@
 
 import server from '../index';
 import request from 'supertest'
+import {UserType} from "../Enum/UserType";
 
 afterEach(() => {
     server.close();
@@ -33,10 +34,26 @@ test('success to login if typing device01 & 123', async () => {
     expect(response.body.isSuccessful).toEqual(true);
 })
 
-// test('SuccessAddUser',async ()=>{
-//     const response = await request(server)
-//         .post('/api/addUser')
-//         .send({
-//
-//         })
-// })
+test('SuccessAddUser',async ()=>{
+    const login = await request(server)
+        .post('/api/supervisorLogin')
+        .send({
+            username: 'admin',
+            password: '123'
+        });
+    const response = await request(server)
+        .post('/api/addUser')
+
+        .send({
+          username:"test01",
+            password:'123',
+            userType:UserType.DEVICEADMIN,
+            telephone:"13944648111",
+            email:"494217470@qq.com",
+        })
+    console.log(login);
+    expect(login.body.isSuccessful).toBe(true);
+    console.log(response);
+    expect(response.body.isSuccessful).toBe(true);
+    
+})
