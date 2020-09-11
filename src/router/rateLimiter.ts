@@ -4,7 +4,7 @@ import {ParameterizedContext} from "koa";
 import {IContext, IState} from "../interface/session";
 
 
-const client = redis.createClient({
+export const client = redis.createClient({
     host: 'localhost',
     port: 6379,
     enable_offline_queue: false,

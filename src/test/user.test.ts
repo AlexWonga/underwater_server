@@ -4,8 +4,10 @@ import server from '../index';
 import request from 'supertest'
 
 afterEach(() => {
-    server.close() // 当所有测试都跑完了之后，关闭server
+    server.close();
+    // 当所有测试都跑完了之后，关闭server
 })
+
 
 
 
@@ -17,7 +19,8 @@ test('success to login if typing admin & 123', async () => {
             username: 'admin',
             password: '123'
         })
-    expect(response.body.isSuccessful).toBe(true);
+    console.log(response)
+    expect(response.body.isSuccessful).toEqual(true);
 })
 
 test('success to login if typing device01 & 123', async () => {
@@ -27,7 +30,7 @@ test('success to login if typing device01 & 123', async () => {
             username: 'device01',
             password: '123'
         })
-    expect(response.body.isSuccessful).toBe(true);
+    expect(response.body.isSuccessful).toEqual(true);
 })
 
 // test('SuccessAddUser',async ()=>{
