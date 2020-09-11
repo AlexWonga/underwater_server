@@ -9,8 +9,21 @@ import {DataCategory as DataCategoryModel} from "../Class/DataCategory";
 
 export async function addDataCategory(dataCategoryName: string, dataType: DataTypeEnum, selectList?: string[]): Promise<ResponseDB<void>> {
     if (selectList !== undefined) {
+        let flag = true;
+        for(let i=0;i<selectList.length;i++){
+            for(let j=0;j<selectList.length;j++){
+                if(i!==j){
+                    if(selectList[i]===selectList[j]){
+                        flag = false;
+                    }
+                }
+            }
+        }
+        if(!flag){
+            return new ResponseDB<void>(false,'invalidSelectList');
+        }
         if (Array.isArray(selectList)) {
-            let flag = true;
+            flag = true;
             selectList.forEach((item) => {
                 if (item === '') {
                     flag = false;
@@ -215,7 +228,7 @@ export async function listDeletedDataCategory(offset: number, limit: number): Pr
             result.push(new DataCategoryModel(ID, categoryName, typeName));
         }
     }
-    return new ResponseDB<DataCategoryModel[]>(true, 'listArticleSuccess', result);
+    return new ResponseDB<DataCategoryModel[]>(true, 'listCategorySuccess', result);
 }
 
 export async function searchCategory(keyword: string): Promise<ResponseDB<DataCategoryModel[]>> {

@@ -5,7 +5,7 @@ import {IContext, IState} from "../interface/session";
 
 
 const client = redis.createClient({
-    host: 'redis',
+    host: 'localhost',
     port: 6379,
     enable_offline_queue: false,
 });
