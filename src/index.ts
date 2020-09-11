@@ -18,7 +18,7 @@ app.use(koaBody({
     formidable: {
         uploadDir: path.join(rootDirPath,'files','upload'),
         keepExtensions: true,
-        maxFileSize: maxFileSize,// 设置上传文件大小最大限制 现在为20M
+        maxFileSize: maxFileSize,// 设置上传文件大小最大限制
         hash:'md5'
     }
 }));
