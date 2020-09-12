@@ -42,6 +42,7 @@ import {DeviceInfo} from "../interface/DeviceInfo";
 import {utilx} from "../instances/utilx";
 import {PictureInfo} from "../Class/PictureInfo";
 import {AttachmentInfo} from "../Class/AttachmentInfo";
+import is_number from "is-number";
 
 
 export async function supervisorAddDevice(deviceName: string, manufacturerID: number, sessionUserID: number, deviceAdminID?: number, deviceDataList?: DeviceData[]): Promise<ResponseServer<number>> {
@@ -310,12 +311,14 @@ export async function checkDeviceAttachment(deviceID: number, sessionUserID: num
             //         );
             //     }
             // }
+            let sum:number = 0;
             for (let i = 0; i < fileSizes.length; i++) {
-                if (fileSizes[i] > maxFileSize) {
-                    return new ResponseServer<void>(
-                        new ResponseDB<void>(false, 'invalidFileSize')
-                    );
-                }
+                sum += fileSizes[i];
+            }
+            if (sum > maxFileSize) {
+                return new ResponseServer<void>(
+                    new ResponseDB<void>(false, 'invalidFileSize')
+                );
             }
             //还可以检查一下数量合不合法，但是现在还没检查：数量任意
             return new ResponseServer<void>(
@@ -599,6 +602,46 @@ export async function deleteDeviceData(deviceID: number, dataCategoryID: number,
                     new ResponseDB<void>(false, 'invalidDevice')
                 );
             }
+        }
+    } else {
+        return permissionDeny();
+    }
+}
+
+export async function checkDeviceStereoPicture(deviceID: number, fileNames: string[], fileSizes: number[], sessionUserID: number) {
+    const res = await checkDvSupSession(sessionUserID);
+    if (res.body.isSuccessful && res.body.data) {
+        const device = await queryDeviceDB(deviceID);
+        if (device) {
+            let flag :boolean = true;
+            fileNames.forEach((item) => {
+                let ext = item.split('.');
+                let trueName = ext[0];//获得真实名字：排除后缀名
+                if(!is_number(trueName)){
+                    flag = false;
+                }
+            });
+            if(!flag){
+                return new ResponseServer(
+                    new ResponseDB(false,'invalidPictureName')
+                );
+            }
+            let sum:number = 0;
+            fileSizes.forEach((item)=>{
+                sum +=item;
+            })
+            if(sum>maxFileSize){
+                return new ResponseServer(
+                    new ResponseDB(false,'invalidFileSize')
+                );
+            }
+            return new ResponseServer<void>(
+                new ResponseDB<void>(true, 'checkDeviceStereoPictureSuccess')
+            );
+        } else {
+            return new ResponseServer<void>(
+                new ResponseDB<void>(false, 'invalidDevice')
+            )
         }
     } else {
         return permissionDeny();

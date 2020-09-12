@@ -34,6 +34,7 @@ import {
     queryDeletedDeviceAmount,
     queryDeviceAttachment,
     deleteDeviceData,
+    checkDeviceStereoPicture
 } from "../server/DeviceServer";
 import {ResponseBody} from "../instances/ResponseBody";
 import {Device} from "../Class/Device";
@@ -511,6 +512,22 @@ module.exports = (router: Router<IState, IContext>) => {
             const {deviceID, dataCategoryID} = ctx.request.body;
             const {userID} = ctx.session.data as ISession;
             const response = await deleteDeviceData(deviceID, dataCategoryID, userID);
+            const {isSuccessful, message} = response.body;
+            ctx.body = new ResponseBody<void>(isSuccessful, message);
+        }
+    });
+
+    router.get('checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
+        if (!is_number(ctx.request.query.deviceID) || !Array.isArray(ctx.request.query.fileNames) || !Array.isArray(ctx.request.query.fileSizes)) {
+            ctx.body = invalidParameter();
+        } else {
+            let {deviceID, fileNames, fileSizes} = ctx.request.query;
+            deviceID = Number(deviceID);
+            fileSizes.forEach((item:any)=>{
+                item = Number(item);
+            })
+            let {userID} = ctx.session.data as ISession;
+            const response = await checkDeviceStereoPicture(deviceID, fileNames, fileSizes, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
         }

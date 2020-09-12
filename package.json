@@ -47,6 +47,8 @@
     "koa": "2.13.0",
     "koa-body": "4.2.0",
     "koa-router": "9.4.0",
+    "koa-compress": "5.0.1",
+    "@types/koa-compress": "4.0.0",
     "@types/koa-helmet": "5.2.0",
     "koa-session": "6.0.0",
     "koa-static": "5.0.0",

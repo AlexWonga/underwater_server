@@ -5,19 +5,32 @@ import {router} from "./router";
 import koaSession from "koa-session";
 import serve from "koa-static";
 import helmet from "koa-helmet";
+import compress from "koa-compress";
 import {logErr} from "./router/LogError";
 import {maxFileSize} from "./instances/maxFileSize";
 import {rootDirPath} from "./config/filePaths";
 //import {rateLimiterMiddleware} from "./router/rateLimiter";
-import fse from "fs-extra";
+
 
 const app = new Koa();
 //import SessionConfig from "./config/SessionConfig";
 //import koaBodyOptions from "./config/koaBodyConfig";
-app.use(async (next: Function) => {
-    await fse.ensureDir(path.join(rootDirPath, 'files', 'upload'));
-    await next();
-});
+
+
+
+app.use(compress({
+    filter (content_type) {
+        return /text/i.test(content_type)
+    },
+    threshold: 2048, //bytes
+    gzip: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH
+    },
+    deflate: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH,
+    },
+    br: false // disable brotli
+}))
 
 app.use(helmet());
 

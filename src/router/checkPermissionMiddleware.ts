@@ -26,7 +26,7 @@ export async function checkSupervisorSession(ctx: ParameterizedContext<IState, I
 }
 
 
-export async function checkSession(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//查有没有session不查权限
+/*export async function checkSession(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//查有没有session不查权限
     if (ctx.session === null) {//先检测session是否为空
         ctx.body = new ResponseBody(false, 'invalidCall');
     } else {
@@ -37,7 +37,7 @@ export async function checkSession(ctx: ParameterizedContext<IState, IContext>, 
             ctx.body = new ResponseBody<void>(false, 'noSessionData');
         }
     }
-}
+}*/
 
 export async function checkDvSupSession(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//查超管和机器人管理员session 普通用户不可以
     if (ctx.session === null) {//先检测session是否为空
