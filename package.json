@@ -2,7 +2,7 @@
   "name": "underwater_rear",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "prestart": "yarn build",
     "start": "nodemon dist/index.js",
     "build": "tsc"

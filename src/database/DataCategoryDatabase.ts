@@ -10,17 +10,17 @@ import {DataCategory as DataCategoryModel} from "../Class/DataCategory";
 export async function addDataCategory(dataCategoryName: string, dataType: DataTypeEnum, selectList?: string[]): Promise<ResponseDB<void>> {
     if (selectList !== undefined) {
         let flag = true;
-        for(let i=0;i<selectList.length;i++){
-            for(let j=0;j<selectList.length;j++){
-                if(i!==j){
-                    if(selectList[i]===selectList[j]){
+        for (let i = 0; i < selectList.length; i++) {
+            for (let j = 0; j < selectList.length; j++) {
+                if (i !== j) {
+                    if (selectList[i] === selectList[j]) {
                         flag = false;
                     }
                 }
             }
         }
-        if(!flag){
-            return new ResponseDB<void>(false,'invalidSelectList');
+        if (!flag) {
+            return new ResponseDB<void>(false, 'invalidSelectList');
         }
         if (Array.isArray(selectList)) {
             flag = true;
@@ -49,7 +49,7 @@ export async function addDataCategory(dataCategoryName: string, dataType: DataTy
             categoryName: dataCategoryName,
             dataTypeID: typeID,
         });
-        if (selectList) { //如果有可选项，记录可选项
+        if (selectList && dataType === DataTypeEnum.SELECT) { //如果有可选项，记录可选项
             for (const item in selectList) {
                 await CategoryOptions.create({
                     optionsName: item,
