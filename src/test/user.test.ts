@@ -3,7 +3,7 @@
 import server from '../index';
 import request from 'supertest'
 import {UserType} from "../Enum/UserType";
-
+import {getCookie} from "./getCookie";
 let cookie:string;
 
 // beforeAll(() => agent
@@ -24,20 +24,6 @@ let cookie:string;
 //         .expect(302));
 // });
 
-let getCookie = function (response:request.Response){
-    let cookie:string = "";
-    const info = response.header['set-cookie'];
-    console.log(info);
-    for(let i=0;i<info.length;i++){
-        let ext = info[i].split(";");
-        console.log(ext);
-        cookie+=ext[0];
-        if(i==0){
-            cookie += ";"
-        }
-    }
-    return cookie;
-}
 
 
 test('success to login if typing admin & 123', async () => {
@@ -82,5 +68,5 @@ test('SuccessAddUser',async ()=>{
             email:"494217470@qq.com",
         })
     expect(response.body.isSuccessful).toBe(true);
+});
 
-})

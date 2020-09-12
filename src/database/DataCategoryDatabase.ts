@@ -91,17 +91,6 @@ export async function modifyDataCategory(categoryID: number, categoryName?: stri
                 return true;
             });
         }
-        if (categoryName !== undefined) { //检验重名
-            const re = await DataCategory.findOne({
-                where: {
-                    categoryName: categoryName,
-                    isInRecycleBin: false,
-                }
-            });
-            if (re !== null) {
-                return new ResponseDB<void>(false, 'duplicateCategoryName');
-            }
-        }
         const result = await DataCategory.findOne({
             where: {
                 ID: categoryID,
