@@ -23,6 +23,9 @@ import {IContext, ISession, IState} from "../interface/session";
 
 
 const isStringArray = function (object: any): boolean {//判断一个参数是不是字符串数组
+    if(!Array.isArray(object)){
+        return false;
+    }
     if (object.length === 0) {//为空非法
         return false;
     }

@@ -111,7 +111,6 @@ export async function modifyDataCategory(categoryID: number, categoryName?: stri
                 where: {
                     dataCategoryID: categoryID,
                 },
-
             });
             await list.forEach((item: { destroy: () => void; }) => {//删除原来的所有相关可选项
                 item.destroy();
