@@ -30,7 +30,9 @@ module.exports = (router: Router<IState, IContext>) => {
         if (typeof ctx.request.body.title !== 'string' || typeof ctx.request.body.content !== 'string' || !checkType.instancesOfArticleType(ctx.request.body.articleType)) {//检查参数类型
             ctx.body = invalidParameter();
         } else {
-            const {title, articleType, content} = ctx.request.body;
+            let {title, articleType, content} = ctx.request.body;
+            const [clearedTitle,clearedContent] = utilx.clear(title,content);
+            title = clearedTitle;content = clearedContent;
             const authorID = (ctx.session.data as ISession).userID;
             const response = await addArticle(title, articleType, content, authorID);
             const {isSuccessful, message} = response.body;
@@ -43,7 +45,9 @@ module.exports = (router: Router<IState, IContext>) => {
         if (checkType.instancesOfArticleType(ctx.request.body.articleInfo)) {
             ctx.body = invalidParameter();
         } else {
-            const {articleID, title, content} = ctx.request.body.articleInfo;
+            let {articleID, title, content} = ctx.request.body.articleInfo;
+            const [clearedTitle,clearedContent] = utilx.clear(title,content);
+            title = clearedTitle;content = clearedContent;
             const response = await modifyArticle(articleID, sessionUserID, title, content);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);

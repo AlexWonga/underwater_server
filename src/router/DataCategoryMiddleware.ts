@@ -20,6 +20,7 @@ import {
 import {DataCategory} from "../Class/DataCategory";
 import is_number from "is-number";
 import {IContext, ISession, IState} from "../interface/session";
+import {utilx} from "../instances/utilx";
 
 
 const isStringArray = function (object: any): boolean {//判断一个参数是不是字符串数组
@@ -41,10 +42,18 @@ const isStringArray = function (object: any): boolean {//判断一个参数是�
 
 module.exports = (router: Router<IState, IContext>) => {
     router.post('/api/addDataCategory', checkSupervisorSession, async (ctx) => {
-        if (typeof ctx.request.body.dataCategoryName !== 'string' || !checkType.instanceOfDataType(ctx.request.body.dataType)) {
+        if (typeof ctx.request.body.dataCategoryName !== 'string' || !checkType.instanceOfDataType(ctx.request.body.dataType) || (!isStringArray(ctx.request.body.selectList) && ctx.request.body.selectList !== 'undefined')) {
             ctx.body = invalidParameter();
         }
-        const {dataCategoryName, dataType, selectList} = ctx.request.body;
+        let {dataCategoryName, dataType, selectList} = ctx.request.body;
+        let [clearedCategoryName] = utilx.clear(dataCategoryName);
+        dataCategoryName = clearedCategoryName;
+        if (Array.isArray(selectList)) {
+            selectList.forEach((item) => {
+                let [clearedItem] = utilx.clear(item);
+                item = clearedItem;
+            })
+        }
         const {userID} = ctx.session.data as ISession;
         const response = await addDataCategory(dataCategoryName, dataType, userID, selectList);
         const {isSuccessful, message} = response.body;
@@ -56,7 +65,15 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = new ResponseBody<void>(false, 'invalidParameter')
         } else {
             const {userID} = ctx.session.data as ISession;
-            const {dataCategoryID, dataCategoryName, selectList} = ctx.request.body;
+            let {dataCategoryID, dataCategoryName, selectList} = ctx.request.body;
+            let [clearedCategoryName] = utilx.clear(dataCategoryName);
+            dataCategoryName = clearedCategoryName;
+            if (Array.isArray(selectList)) {
+                selectList.forEach((item) => {
+                    let [clearedItem] = utilx.clear(item);
+                    item = clearedItem;
+                })
+            }
             const response = await modifyDataCategory(dataCategoryID, userID, dataCategoryName, selectList);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);

@@ -16,6 +16,7 @@ import {ResponseServer} from "../instances/responseServer";
 import {IContext, IState} from "../interface/session";
 
 
+
 module.exports = (router: Router<IContext, IState>) => {
     router.post('/api/modifyBannerPicture', checkSupervisorSession, async (ctx): Promise<void> => {
         if (ctx.request.files !== undefined) {
@@ -35,17 +36,19 @@ module.exports = (router: Router<IContext, IState>) => {
         }
     });
     router.post('/api/modifyFooter', checkSupervisorSession, async (ctx): Promise<void> => {
-        const {footer} = ctx.request.body;
-        if (typeof (footer) !== 'string') {
+        if (typeof (ctx.request.body.footer) !== 'string') {
             ctx.body = invalidParameter();
         } else {
+            let {footer} = ctx.request.body;
+            let [clearedFooter] = utilx.clear(footer);
+            footer = clearedFooter;
             const response: ResponseServer<void> = await modifyFooter(footer);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
         }
     });
     router.post('/api/modifyPlatformOverview', checkSupervisorSession, async (ctx): Promise<void> => {
-        const {Article} = ctx.request.body;
+        let {Article} = ctx.request.body;
         const [article] = utilx.clear(Article);
         if (typeof (article) !== 'string') {
             ctx.body = invalidParameter();
