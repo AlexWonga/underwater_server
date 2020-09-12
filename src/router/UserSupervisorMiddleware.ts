@@ -144,7 +144,7 @@ module.exports = (router: Router<IState, IContext>) => {
         ctx.session.data = null;
         ctx.body = new ResponseBody<void>(true, 'logoutSuccess');
     });
-    router.get('/api/searchUser', checkSupervisorSession, async (ctx) => {
+    router.get('/api/searchUserInfo', checkSupervisorSession, async (ctx) => {
         if (typeof ctx.request.query.keyword !== "string") {
             ctx.body = invalidParameter();
         } else {
