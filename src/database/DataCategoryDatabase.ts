@@ -109,7 +109,7 @@ export async function modifyDataCategory(categoryID: number, categoryName?: stri
         if (selectList !== undefined) {
             const list = await CategoryOptions.findAll({
                 where: {
-                    dataCategoryID: categoryID,
+                    categoryID: categoryID,
                 },
             });
             await list.forEach((item: { destroy: () => void; }) => {//删除原来的所有相关可选项

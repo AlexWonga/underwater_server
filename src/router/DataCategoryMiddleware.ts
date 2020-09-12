@@ -52,7 +52,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.post('/api/modifyDataCategory', checkSupervisorSession, async (ctx) => {
-        if (typeof ctx.request.body.dataCategoryID !== 'number' || (typeof ctx.request.body.dataCategoryName !== 'string' && typeof ctx.request.body.dataCategoryName !== 'undefined') || (!isStringArray(ctx.request.body.selectList) || typeof ctx.request.body.selectList === 'undefined')) {
+        if (typeof ctx.request.body.dataCategoryID !== 'number' || (typeof ctx.request.body.dataCategoryName !== 'string' && typeof ctx.request.body.dataCategoryName !== 'undefined') || (!isStringArray(ctx.request.body.selectList) || typeof ctx.request.body.selectList !== 'undefined')) {
             ctx.body = new ResponseBody<void>(false, 'invalidParameter')
         } else {
             const {userID} = ctx.session.data as ISession;
