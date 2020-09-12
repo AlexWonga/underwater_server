@@ -3,11 +3,11 @@
  */
 
 export class CategoryOption {
-    public optionName: string;
+    public optionsName: string;
     public categoryID: number;
 
     constructor(optionName: string, foreignID: number) {
         this.categoryID = foreignID;
-        this.optionName = optionName;
+        this.optionsName = optionName;
     }
 }
