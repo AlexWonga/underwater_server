@@ -6,8 +6,8 @@ export class CategoryOption {
     public optionsName: string;
     public categoryID: number;
 
-    constructor(optionName: string, foreignID: number) {
-        this.categoryID = foreignID;
-        this.optionsName = optionName;
+    constructor(optionsName: string, categoryID: number) {
+        this.categoryID = categoryID;
+        this.optionsName = optionsName;
     }
 }

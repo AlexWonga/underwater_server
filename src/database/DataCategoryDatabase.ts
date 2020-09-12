@@ -112,9 +112,9 @@ export async function modifyDataCategory(categoryID: number, categoryName?: stri
                     categoryID: categoryID,
                 },
             });
-            await list.forEach((item: { destroy: () => void; }) => {//删除原来的所有相关可选项
-                item.destroy();
-            });
+            for(let i = 0;i<list.length;i++){
+                await list[i].destroy();
+            }
             let lists: Object[] = [];
             selectList.forEach((item) => { //创建新的可选项
                 lists.push(new CategoryOption(item, categoryID));
