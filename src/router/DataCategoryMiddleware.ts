@@ -1,5 +1,5 @@
 import Router from "koa-router";
-import {checkDvSupSession,  checkSupervisorSession} from "./checkPermissionMiddleware";
+import {checkDvSupSession, checkSupervisorSession} from "./checkPermissionMiddleware";
 import {ResponseBody} from "../instances/ResponseBody";
 import {checkType} from "../instances/checkType";
 import {invalidParameter} from "./invalidParameter";
@@ -23,16 +23,15 @@ import {IContext, ISession, IState} from "../interface/session";
 
 
 const isStringArray = function (object: any): boolean {//判断一个参数是不是字符串数组
-    if(!Array.isArray(object)){
+    if (!Array.isArray(object)) {
         return false;
-    }
-    else {
+    } else {
         if (object.length === 0) {//为空非法
             return false;
         }
         let flag = true;
-        object.forEach((item)=>{
-            if(typeof item!=='string'){
+        object.forEach((item) => {
+            if (typeof item !== 'string') {
                 flag = false;
             }
         });
@@ -53,7 +52,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.post('/api/modifyDataCategory', checkSupervisorSession, async (ctx) => {
-        if (typeof ctx.request.body.dataCategoryID !== 'number' || (typeof ctx.request.body.dataCategoryName !== 'string' && typeof ctx.request.body.dataCategoryName !== 'undefined') || !isStringArray(ctx.request.body.selectList)) {
+        if (typeof ctx.request.body.dataCategoryID !== 'number' || (typeof ctx.request.body.dataCategoryName !== 'string' && typeof ctx.request.body.dataCategoryName !== 'undefined') || (!isStringArray(ctx.request.body.selectList) || typeof ctx.request.body.selectList === 'undefined')) {
             ctx.body = new ResponseBody<void>(false, 'invalidParameter')
         } else {
             const {userID} = ctx.session.data as ISession;
@@ -197,7 +196,7 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get("/api/queryCategoryAmount",checkDvSupSession, async (ctx) => {
+    router.get("/api/queryCategoryAmount", checkDvSupSession, async (ctx) => {
         const response = await queryCategoryAmount();
         if (response.body.data && response.body.isSuccessful) {
             const {isSuccessful, message, data} = response.body;
