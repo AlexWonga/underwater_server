@@ -4,11 +4,27 @@ import server from '../index';
 import request from 'supertest'
 import {UserType} from "../Enum/UserType";
 
-afterEach(() => {
-    server.close();
-    // 当所有测试都跑完了之后，关闭server
-})
+const agent = request.agent(server);
+let cookie:string;
 
+beforeAll(() => agent
+    .post('/api/supervisorlogin')
+    .send({
+        username: 'admin',
+        password: "123",
+    })
+    .expect(200)
+    .then((res) => {
+        const cookies = res.headers['set-cookie'];
+        cookie = cookies.join(';');
+    }));
+
+// describe('GET logout', () => {
+//     it('logs user out', () => agent
+//         .get('/logout')
+//         .set('Cookie', cookie)
+//         .expect(302));
+// });
 
 
 
@@ -16,11 +32,11 @@ afterEach(() => {
 test('success to login if typing admin & 123', async () => {
     const response = await request(server)
         .post('/api/supervisorLogin')
+        .set("cookie",cookie)
         .send({
             username: 'admin',
             password: '123'
         })
-    console.log(response)
     expect(response.body.isSuccessful).toEqual(true);
 })
 
@@ -35,12 +51,6 @@ test('success to login if typing device01 & 123', async () => {
 })
 
 test('SuccessAddUser',async ()=>{
-    const login = await request(server)
-        .post('/api/supervisorLogin')
-        .send({
-            username: 'admin',
-            password: '123'
-        });
     const response = await request(server)
         .post('/api/addUser')
 
@@ -51,9 +61,6 @@ test('SuccessAddUser',async ()=>{
             telephone:"13944648111",
             email:"494217470@qq.com",
         })
-    console.log(login);
-    expect(login.body.isSuccessful).toBe(true);
-    console.log(response);
     expect(response.body.isSuccessful).toBe(true);
-    
+
 })
