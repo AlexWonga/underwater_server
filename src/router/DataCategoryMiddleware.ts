@@ -26,20 +26,17 @@ const isStringArray = function (object: any): boolean {//判断一个参数是�
     if(!Array.isArray(object)){
         return false;
     }
-    if (object.length === 0) {//为空非法
-        return false;
-    }
-    let flag: boolean = Object.prototype.toString.call(object) === '[object Array]';
-    if (flag) {
-        let flag2: boolean = true;
-        object.forEach((item: any) => {
-            if (typeof item !== 'string' || item === '') {//是字符串但是为空也是非法的
-                flag2 = false;
+    else {
+        if (object.length === 0) {//为空非法
+            return false;
+        }
+        let flag = true;
+        object.forEach((item)=>{
+            if(typeof item!=='string'){
+                flag = false;
             }
         });
-        return flag2;
-    } else {
-        return false;
+        return flag;
     }
 }
 
