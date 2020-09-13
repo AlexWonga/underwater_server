@@ -517,7 +517,7 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
+    router.get('/api/checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
         if (!is_number(ctx.request.query.deviceID) || !Array.isArray(ctx.request.query.fileNames) || !Array.isArray(ctx.request.query.fileSizes)) {
             ctx.body = invalidParameter();
         } else {
