@@ -9,7 +9,7 @@ import {checkDvSupSession} from "./checkPermissionMiddleware";
 // import path from "path";
 
 module.exports = (router: Router<IContext, IState>) => {
-    router.post('uploadTwoDimensionalData', checkDvSupSession, async (ctx) => {
+    router.post('/api/uploadTwoDimensionalData', checkDvSupSession, async (ctx) => {
         if (typeof ctx.request.body.deviceID !== 'number' || typeof ctx.request.body.categoryID !== 'number'||!ctx.request.files) {
             ctx.body = invalidParameter();
         } else {
@@ -22,7 +22,7 @@ module.exports = (router: Router<IContext, IState>) => {
         }
     });
 
-    router.post("deleteTwoDimensionalData", checkDvSupSession, async (ctx) => {
+    router.post("/api/deleteTwoDimensionalData", checkDvSupSession, async (ctx) => {
         if(typeof ctx.request.body.deviceID !== 'number' || typeof ctx.request.body.twoDimensionalCategoryID !== 'number'){
             ctx.body = invalidParameter();
         } else {
