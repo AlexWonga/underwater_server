@@ -700,7 +700,7 @@ export async function queryDeviceAmountOnID(userID: number) {
     const amount = await Device.count({
         where: {
             userInfoID: userID,
-            isInRecycleBin: true,
+            isInRecycleBin: false,
         }
     });
     return new ResponseDB<number>(true, 'queryDeviceAmountOnIDSuccess', amount);
