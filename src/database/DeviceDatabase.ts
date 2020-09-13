@@ -786,3 +786,25 @@ export async function deleteDeviceData(deviceID: number, categoryID: number): Pr
         throw e;
     }
 }
+
+export async function destroyDevice(deviceID: number) {
+    const t = await sequelize.transaction();
+    try {
+        const device = await Device.findOne({
+            where: {
+                ID: deviceID,
+            }
+        });
+        if (device) {
+            await device.destroy();
+            await t.commit();
+            return new ResponseDB<void>(true, 'destroySuccess');
+        } else {
+            await t.commit();
+            return new ResponseDB<void>(false, 'invalidDevice');
+        }
+    } catch (e) {
+        await t.rollback();
+        throw e;
+    }
+}

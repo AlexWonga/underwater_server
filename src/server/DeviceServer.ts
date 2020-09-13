@@ -32,6 +32,7 @@ import {
     queryDeviceStereoPicture as queryDeviceStereoPictureDB,
     searchDeletedDevice as searchDeletedDeviceDB,
     searchDevice as searchDeviceDB,
+    destroyDevice as destroyDeviceDB,
 } from "../database/DeviceDatabase";
 import {checkDvSupSession, checkSupervisorSession} from "./checkPermission";
 import {permissionDeny} from "./permissionDeny";
@@ -645,5 +646,15 @@ export async function checkDeviceStereoPicture(deviceID: number, fileNames: stri
         }
     } else {
         return permissionDeny();
+    }
+}
+
+export async function destroyDevice(deviceID:number,sessionUserID:number){
+    const res = await checkDvSupSession(sessionUserID);
+    if(res.body.isSuccessful && res.body.data){
+        const response = await destroyDeviceDB(deviceID);
+        return new ResponseServer<void>(response);
+    } else {
+        return permissionDeny<void>();
     }
 }

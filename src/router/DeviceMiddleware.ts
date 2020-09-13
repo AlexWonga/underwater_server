@@ -34,7 +34,7 @@ import {
     queryDeletedDeviceAmount,
     queryDeviceAttachment,
     deleteDeviceData,
-    checkDeviceStereoPicture
+    checkDeviceStereoPicture, destroyDevice
 } from "../server/DeviceServer";
 import {ResponseBody} from "../instances/ResponseBody";
 import {Device} from "../Class/Device";
@@ -518,7 +518,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.post('/api/checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
-        if (typeof (ctx.request.body.deviceID)!=='number' || !Array.isArray(ctx.request.body.fileNames) || !Array.isArray(ctx.request.body.fileSizes)) {
+        if (typeof (ctx.request.body.deviceID) !== 'number' || !Array.isArray(ctx.request.body.fileNames) || !Array.isArray(ctx.request.body.fileSizes)) {
             ctx.body = invalidParameter();
         } else {
             let {deviceID, fileNames, fileSizes} = ctx.request.body;
@@ -526,6 +526,18 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await checkDeviceStereoPicture(deviceID, fileNames, fileSizes, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
+        }
+    });
+
+    router.post('/api/destroyDevice', checkDvSupSession, async (ctx) => {
+        if (typeof ctx.request.body.deviceID !== 'number') {
+            ctx.body = invalidParameter();
+        } else {
+            const {deviceID} = ctx.request.body;
+            const {userID} = ctx.session.data as ISession
+            const response = await destroyDevice(deviceID,userID);
+            const {isSuccessful,message} = response.body;
+            ctx.body = new ResponseBody<void>(isSuccessful,message);
         }
     });
 }
