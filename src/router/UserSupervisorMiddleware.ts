@@ -30,7 +30,6 @@ module.exports = (router: Router<IState, IContext>) => {
             const {username, password} = ctx.request.body;//从请求中取出用户名与密码
             //console.log(username, password);
             const response = await supervisorLogin(username, password);//服务层返回的response
-            console.log(response);
             if (response.session) {//如果session不为空 就设置session
                 ctx.session.data = response.session;
             }
@@ -40,7 +39,7 @@ module.exports = (router: Router<IState, IContext>) => {
         // await next();
     });
     router.post('/api/addUser', checkSupervisorSession, async (ctx): Promise<void> => {//添加用户
-        console.log(ctx.request.body);
+        //console.log(ctx.request.body);
         if (!checkType.instanceOfUserType(ctx.request.body.userType)) {//检查该参数是不是设定的用户类型枚举类型
             ctx.body = new ResponseBody<void>(false, 'invalidUserType');
         } else if (typeof ctx.request.body.username !== 'string' || typeof ctx.request.body.password !== 'string' || typeof ctx.request.body.telephone !== 'string' || typeof ctx.request.body.email !== 'string') {
@@ -53,7 +52,7 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
     router.get('/api/queryUserInfo', checkDvSupSession, async (ctx): Promise<void> => {//超管可以查任何人的信息，用户可以查自己的信息
-        console.log(ctx.request.query.id);
+        //console.log(ctx.request.query.id);
         if (!is_number(ctx.request.query.id)) {
             ctx.body = invalidParameter();
         } else {
@@ -139,11 +138,15 @@ module.exports = (router: Router<IState, IContext>) => {
                 ctx.body = new ResponseBody<number>(isSuccessful, message);
             }
         }
-    })
+    });
+
+
     router.get('/api/logout', async (ctx): Promise<void> => {
         ctx.session.data = null;
         ctx.body = new ResponseBody<void>(true, 'logoutSuccess');
     });
+
+
     router.get('/api/searchUserInfo', checkSupervisorSession, async (ctx) => {
         if (typeof ctx.request.query.keyword !== "string") {
             ctx.body = invalidParameter();

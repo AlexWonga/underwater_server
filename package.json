@@ -2,7 +2,7 @@
   "name": "underwater_rear",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "prestart": "yarn build",
     "start": "nodemon dist/index.js",
     "build": "tsc"
@@ -13,7 +13,6 @@
     "mapCoverage": true,
     "collectCoverage": true,
     "coverageReporters": [
-      "lcov",
       "text"
     ]
   },
