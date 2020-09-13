@@ -517,15 +517,11 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
-        if (!is_number(ctx.request.query.deviceID) || !Array.isArray(ctx.request.query.fileNames) || !Array.isArray(ctx.request.query.fileSizes)) {
+    router.post('/api/checkDeviceStereoPicture', checkDvSupSession, async (ctx) => {
+        if (typeof (ctx.request.body.deviceID)!=='number' || !Array.isArray(ctx.request.body.fileNames) || !Array.isArray(ctx.request.query.fileSizes)) {
             ctx.body = invalidParameter();
         } else {
-            let {deviceID, fileNames, fileSizes} = ctx.request.query;
-            deviceID = Number(deviceID);
-            fileSizes.forEach((item:any)=>{
-                item = Number(item);
-            })
+            let {deviceID, fileNames, fileSizes} = ctx.request.body;
             let {userID} = ctx.session.data as ISession;
             const response = await checkDeviceStereoPicture(deviceID, fileNames, fileSizes, userID);
             const {isSuccessful, message} = response.body;
