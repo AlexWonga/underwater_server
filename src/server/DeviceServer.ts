@@ -456,18 +456,18 @@ export async function addDeviceStereoPicture(deviceID: number, files: File[], se
             new ResponseDB<void>(false, 'invalidPicture')
         )
     }
-    const picturePath: string[] = [];
-    for (let i = 0; i < f.length; i++) {
-        //let dist:string = path.join(dirPath , f[i].name);
-        //await fse.move(f[i].path,dist);
-        picturePath.push(f[i].path);
-    }
+    // const picturePath: string[] = [];
+    // for (let i = 0; i < f.length; i++) {
+    //     //let dist:string = path.join(dirPath , f[i].name);
+    //     //await fse.move(f[i].path,dist);
+    //     picturePath.push(f[i].path);
+    // }
     if (res.body.isSuccessful && res.body.data) {
         if (res.body.data.userType === UserType.DEVICEADMIN) {
             const device = await queryDeviceDB(deviceID);
             if (device.data && device.isSuccessful) {
                 if (device.data.userID === sessionUserID) {
-                    const response = await addDeviceStereoPictureDB(deviceID, picturePath);
+                    const response = await addDeviceStereoPictureDB(deviceID, f);
                     return new ResponseServer<void>(response);
                 } else {
                     return permissionDeny<void>();
@@ -478,7 +478,7 @@ export async function addDeviceStereoPicture(deviceID: number, files: File[], se
                 );
             }
         } else if (res.body.data.userType === UserType.SUPERVISOR) {
-            const response = await addDeviceStereoPictureDB(deviceID, picturePath);
+            const response = await addDeviceStereoPictureDB(deviceID, f);
             return new ResponseServer<void>(response);
         } else {
             return permissionDeny<void>();

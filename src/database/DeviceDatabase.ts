@@ -583,8 +583,9 @@ export async function deleteDeviceAttachment(deviceID: number, fileIDList: numbe
     }
 }
 
-export async function addDeviceStereoPicture(deviceID: number, picturePaths: string[]): Promise<ResponseDB<void>> {
+export async function addDeviceStereoPicture(deviceID: number, files: File[]): Promise<ResponseDB<void>> {
     const t = await sequelize.transaction();
+    let timeStamp = new Date().getTime();
     let date = utilx.getTodayString();
     let dirPath = path.join(rootDirPath, 'files', filesDir, devicePicturesDir, date);
     try {
@@ -609,11 +610,11 @@ export async function addDeviceStereoPicture(deviceID: number, picturePaths: str
             }
             let newPictures: Picture3D[] = [];
             let distPaths: string[] = [];
-            for (let i = 0; i < picturePaths.length; i++) {
-                distPaths.push(path.join(dirPath, utilx.getFileName(picturePaths[i])));
+            for (let i = 0; i < files.length; i++) {
+                distPaths.push(path.join(dirPath, timeStamp + "_" + files[i].name));
             }
             for (let i = 0; i < distPaths.length; i++) {
-                await fse.move(picturePaths[i], distPaths[i]);
+                await fse.move(files[i].path, distPaths[i]);
             }
             distPaths.forEach((item) => {
                 let a: Picture3D = {device: device, deviceID: deviceID, picturePath: item};
@@ -634,6 +635,7 @@ export async function queryDeviceStereoPicture(deviceID: number): Promise<Respon
     const device = await Device.findOne({
         where: {
             ID: deviceID,
+            order:["picturePath"],
         }
     });
 
