@@ -109,6 +109,7 @@ function codeReflectToAddress(item:IAddress,addressCode:string,address:string):s
         return address;
     } else {
         if(item.children){
+            address+=item.label;
             for(let i = 0;i<item.children.length;i++){
                 address = codeReflectToAddress(item.children[i],addressCode,address);
             }
