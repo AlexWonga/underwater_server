@@ -33,6 +33,7 @@ import {
     searchDeletedDevice as searchDeletedDeviceDB,
     searchDevice as searchDeviceDB,
     destroyDevice as destroyDeviceDB,
+    searchDeviceOnID as searchDeviceOnIDDB,
 } from "../database/DeviceDatabase";
 import {checkDvSupSession, checkSupervisorSession} from "./checkPermission";
 import {permissionDeny} from "./permissionDeny";
@@ -44,6 +45,7 @@ import {utilx} from "../instances/utilx";
 import {PictureInfo} from "../Class/PictureInfo";
 import {AttachmentInfo} from "../Class/AttachmentInfo";
 import is_number from "is-number";
+
 
 
 export async function supervisorAddDevice(deviceName: string, manufacturerID: number, sessionUserID: number, deviceAdminID?: number, deviceDataList?: DeviceData[]): Promise<ResponseServer<number>> {
@@ -656,5 +658,20 @@ export async function destroyDevice(deviceID:number,sessionUserID:number){
         return new ResponseServer<void>(response);
     } else {
         return permissionDeny<void>();
+    }
+}
+
+export async function searchDeviceOnID(keyword:string,sessionUserID:number){
+    if (keyword === '') {
+        return new ResponseServer<Device[]>(
+            new ResponseDB(false, 'invalidParameter')
+        );
+    }
+    const res = await checkDvSupSession(sessionUserID);
+    if(res.body.isSuccessful && res.body.data){
+        const response = await searchDeviceOnIDDB(keyword,sessionUserID);
+        return new ResponseServer<Device[]>(response);
+    } else {
+        return permissionDeny<Device[]>();
     }
 }

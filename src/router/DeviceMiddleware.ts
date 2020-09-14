@@ -34,7 +34,9 @@ import {
     queryDeletedDeviceAmount,
     queryDeviceAttachment,
     deleteDeviceData,
-    checkDeviceStereoPicture, destroyDevice
+    checkDeviceStereoPicture,
+    destroyDevice,
+    searchDeviceOnID
 } from "../server/DeviceServer";
 import {ResponseBody} from "../instances/ResponseBody";
 import {Device} from "../Class/Device";
@@ -188,6 +190,24 @@ module.exports = (router: Router<IState, IContext>) => {
             let {keyword} = ctx.request.query;
             const {userID} = ctx.session.data as ISession;
             const response = await searchDeletedDevice(keyword, userID);
+            if (response.body.data && response.body.isSuccessful) {
+                const {isSuccessful, message, data} = response.body;
+                ctx.body = new ResponseBody<Device[]>(isSuccessful, message, data);
+            } else {
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<Device[]>(isSuccessful, message);
+            }
+        }
+    });
+
+
+    router.get('/api/searchDeviceOnID', async (ctx) => {
+        if ((typeof ctx.request.query.keyword !== 'string' && typeof ctx.request.query.keyword !== 'undefined')) {
+            ctx.body = invalidParameter();
+        } else {
+            let {keyword} = ctx.request.query;
+            const {userID} = ctx.session.data as ISession;
+            const response = await searchDeviceOnID(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
                 ctx.body = new ResponseBody<Device[]>(isSuccessful, message, data);

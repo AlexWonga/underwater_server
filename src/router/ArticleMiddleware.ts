@@ -18,7 +18,7 @@ import {
     queryArticleInfo,
     queryArticleAmountOnID,
     listArticleOnID,
-    queryDeletedArticleAmount
+    queryDeletedArticleAmount, searchArticleInfoOnID
 } from "../server/ArticleServer";
 import {IContext, ISession, IState} from "../interface/session";
 import {utilx} from "../instances/utilx";
@@ -31,8 +31,9 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {title, articleType, content} = ctx.request.body;
-            const [clearedTitle,clearedContent] = utilx.clear(title,content);
-            title = clearedTitle;content = clearedContent;
+            const [clearedTitle, clearedContent] = utilx.clear(title, content);
+            title = clearedTitle;
+            content = clearedContent;
             const authorID = (ctx.session.data as ISession).userID;
             const response = await addArticle(title, articleType, content, authorID);
             const {isSuccessful, message} = response.body;
@@ -46,8 +47,9 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {articleID, title, content} = ctx.request.body.articleInfo;
-            const [clearedTitle,clearedContent] = utilx.clear(title,content);
-            title = clearedTitle;content = clearedContent;
+            const [clearedTitle, clearedContent] = utilx.clear(title, content);
+            title = clearedTitle;
+            content = clearedContent;
             const response = await modifyArticle(articleID, sessionUserID, title, content);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -148,7 +150,6 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.get('/api/searchArticleInfo', checkSupervisorSession, async (ctx) => {
-        //todo:限制请求频率
 
         if (typeof ctx.request.query.keyword !== 'string' || !checkType.instancesOfArticleType(ctx.request.query.articleType)) {
             ctx.body = invalidParameter();
@@ -233,6 +234,24 @@ module.exports = (router: Router<IState, IContext>) => {
             } else {
                 const {isSuccessful, message} = response.body;
                 ctx.body = new ResponseBody<number>(isSuccessful, message);
+            }
+        }
+    });
+
+    router.get('/api/searchArticleInfoOnID', checkDvSupSession, async (ctx) => {
+
+        if (typeof ctx.request.query.keyword !== 'string' || !checkType.instancesOfArticleType(ctx.request.query.articleType)) {
+            ctx.body = invalidParameter();
+        } else {
+            const {keyword, articleType} = ctx.request.query;
+            const {userID} = ctx.session.data as ISession
+            const response = await searchArticleInfoOnID(keyword, articleType, userID);
+            if (response.body.data && response.body.isSuccessful) {
+                const {isSuccessful, message, data} = response.body;
+                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+            } else {
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
             }
         }
     });

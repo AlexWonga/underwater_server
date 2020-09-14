@@ -16,6 +16,8 @@ import {
     listManufacturerOnID as listManufacturerOnIDDB,
     queryManufacturerInfoAmountInfoOnID as queryManufacturerInfoAmountInfoOnIDDB,
     queryDeletedManufacturerInfoAmount as queryDeletedManufacturerInfoAmountDB,
+    searchManufacturerNotJoin as searchManufacturerNotJoinDB,
+    searchManufacturerOnID as searchManufacturerOnIDDB,
 } from "../database/ManufacturerDatabase";
 import {permissionDeny} from "./permissionDeny";
 import {ManufacturerInfo} from "../Class/ManufacturerInfo";
@@ -183,5 +185,37 @@ export async function userLeaveManufacturer(manufacturerID: number, sessionID: n
         return new ResponseServer<void>(response);
     } else {
         return permissionDeny<void>();
+    }
+}
+
+export async function searchManufacturerOnID(keyword:string,sessionUserID:number):Promise<ResponseServer<ManufacturerInfo[]>>{
+    if ( keyword === '') {
+        return new ResponseServer<ManufacturerInfo[]>(
+            new ResponseDB(false, 'invalidParameter')
+        );
+    } else {
+        const res = await checkDvSupSession(sessionUserID);
+        if(res.body.isSuccessful && res.body.data){
+            const response = await searchManufacturerOnIDDB(keyword,sessionUserID);
+            return new ResponseServer<ManufacturerInfo[]>(response);
+        } else {
+            return permissionDeny();
+        }
+    }
+}
+
+export async function searchManufacturerNotJoin(keyword:string,sessionUserID:number):Promise<ResponseServer<ManufacturerInfo[]>>{
+    if (keyword === '') {
+        return new ResponseServer<ManufacturerInfo[]>(
+            new ResponseDB(false, 'invalidParameter')
+        );
+    } else {
+        const res = await checkDvSupSession(sessionUserID);
+        if(res.body.isSuccessful && res.body.data){
+            const response = await searchManufacturerNotJoinDB(keyword,sessionUserID);
+            return new ResponseServer<ManufacturerInfo[]>(response);
+        } else {
+            return permissionDeny();
+        }
     }
 }

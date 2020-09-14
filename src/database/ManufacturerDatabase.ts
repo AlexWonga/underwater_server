@@ -293,3 +293,65 @@ export async function queryManufacturerInfoAmountInfoOnID(userID: number): Promi
     });
     return new ResponseDB<number>(true, 'queryManufacturerInfoAmountOnIDSuccess', relations);
 }
+
+
+export async function searchManufacturerOnID(keyword: string, userID: number): Promise<ResponseDB<ManufacturerInfo[]>> {
+    const relationList = await ManufacturerUserInfo.findAll({
+        where:{
+            userInfoID:userID,
+        }
+    });
+    let manufacturerIDList:number[] = [];
+    if(relationList){
+        for(let i = 0;i<relationList.length;i++){
+            manufacturerIDList.push(relationList[i].manufacturerID);
+        }
+        const manufacturerList = await Manufacturer.findAll({
+            where:{
+                isInRecycleBin: false,
+                manufacturerName: {[Op.like]: '%' + keyword + '%'},
+            }
+        });
+        let result:ManufacturerInfo[] = [];
+        manufacturerList.forEach((item)=>{
+            if(manufacturerIDList.includes(item.ID)){
+                const {ID,manufacturerName,manufacturerIntroduction,manufacturerTelephone,manufacturerAddress} = item;
+                result.push(new ManufacturerInfo(ID,manufacturerName,manufacturerAddress,manufacturerIntroduction,manufacturerTelephone));
+            }
+        })
+        return new ResponseDB<ManufacturerInfo[]>(true,'searchSuccess',result);
+    } else {
+        return new ResponseDB<ManufacturerInfo[]>(false,'noRelation');
+    }
+}
+
+
+export async function searchManufacturerNotJoin(keyword:string,userID:number){
+    const relationList = await ManufacturerUserInfo.findAll({//获得用户的厂商关系
+        where:{
+            userInfoID:userID,
+        }
+    });
+    if(relationList) {
+        let manufacturerIDList :number[] = [];//所有用户已经加入的厂商ID
+        relationList.forEach((item) => {
+            manufacturerIDList.push(item.manufacturerID);
+        });
+        const manufacturerList = await Manufacturer.findAll({//关键词搜索到的所有厂商
+            where:{
+                isInRecycleBin: false,
+                manufacturerName: {[Op.like]: '%' + keyword + '%'},
+            }
+        });
+        let result:ManufacturerInfo[] = [];
+        manufacturerList.forEach((item)=>{
+            if(!manufacturerIDList.includes(item.ID)){
+                const {ID,manufacturerName,manufacturerIntroduction,manufacturerTelephone,manufacturerAddress} = item;
+                result.push(new ManufacturerInfo(ID,manufacturerName,manufacturerAddress,manufacturerIntroduction,manufacturerTelephone));
+            }
+        });
+        return new ResponseDB<ManufacturerInfo[]>(true,'searchSuccess',result);
+    } else {
+        return new ResponseDB<ManufacturerInfo[]>(false,'noRelation');
+    }
+}

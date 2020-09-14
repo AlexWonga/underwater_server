@@ -808,3 +808,19 @@ export async function destroyDevice(deviceID: number) {
         throw e;
     }
 }
+
+export async function searchDeviceOnID(keyword: string, userID: number) {
+    const DeviceList = await Device.findAll({
+        where: {
+            isInRecycleBin: false,
+            deviceName: {[Op.like]: '%' + keyword + '%'},
+            userInfoID: userID,
+        }
+    });
+    const result: DeviceModel[] = [];
+    DeviceList.forEach((item) => {
+        const {ID, manufacturerID, deviceName, createdAt, updatedAt, userInfoID} = item;
+        result.push(new DeviceModel(ID, manufacturerID, deviceName, createdAt.getTime(), updatedAt.getTime(), userInfoID));
+    });
+    return new ResponseDB<DeviceModel[]>(true, 'searchDeviceSuccess', result);
+}

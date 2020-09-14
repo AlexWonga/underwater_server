@@ -11,7 +11,8 @@ import {
     searchDeletedArticleInfo as searchDeletedArticleInfoDB,
     queryArticleAmountOnID as queryArticleAmountOnIDDB,
     listArticleOnID as listArticleOnIDDB,
-    queryDeletedArticleAmount as queryDeletedArticleAmountDB
+    queryDeletedArticleAmount as queryDeletedArticleAmountDB,
+    searchArticleInfoOnID as searchArticleInfoOnIDDB,
 } from "../database/ArticleDatabase";
 import {Article} from "../Class/Article";
 import {UserInfo} from "../Class/UserInfo";
@@ -24,6 +25,7 @@ import {ResponseDB} from "../instances/ResponseDB";
 import {IArticle} from "../Class/IArticle";
 import {checkDvSupSession, checkSupervisorSession} from "./checkPermission";
 import {permissionDeny} from "./permissionDeny";
+
 
 
 export async function addArticle(title: string, articleType: ArticleType, content: string, sessionUserID: number): Promise<ResponseServer<void>> {
@@ -210,5 +212,20 @@ export async function queryDeletedArticleAmount(articleType:ArticleType,sessionU
         return new ResponseServer<number>(response);
     } else {
         return permissionDeny<number>();
+    }
+}
+
+export async function searchArticleInfoOnID(keyword:string,articleType:ArticleType,sessionUserID:number):Promise<ResponseServer<Article[]>>{
+    if (keyword === '') {
+        return new ResponseServer<Article[]>(
+            new ResponseDB(false, 'invalidParameter')
+        );
+    }
+    const res = await checkDvSupSession(sessionUserID);
+    if(res.body.data && res.body.isSuccessful){
+        const response = await searchArticleInfoOnIDDB(keyword,articleType,sessionUserID);
+        return new ResponseServer<Article[]>(response);
+    } else {
+        return permissionDeny();
     }
 }

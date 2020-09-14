@@ -18,12 +18,13 @@ import {
     userJoinManufacturer,
     userLeaveManufacturer,
     queryDeletedManufacturerInfoAmount,
+    searchManufacturerNotJoin,
+    searchManufacturerOnID,
 } from "../server/ManufacturerServer";
 import {ManufacturerInfo} from "../Class/ManufacturerInfo";
 import is_number from "is-number";
 import {IContext, ISession, IState} from "../interface/session";
 import {checkType} from "../instances/checkType";
-import {utilx} from "../instances/utilx";
 
 module.exports = (router: Router<IState, IContext>) => {
     router.post('/api/addManufacturer', checkDvSupSession, async (ctx): Promise<void> => {
@@ -253,16 +254,37 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/getAreaName',async (ctx)=>{
-        if(!is_number(ctx.request.query.areaCode) && typeof ctx.request.query.areaCode!=='string'){
+
+    router.get('/api/searchManufacturerOnID',checkDvSupSession,async (ctx)=>{
+        if (typeof ctx.request.query.keyword !== 'string') {
             ctx.body = invalidParameter();
         } else {
-            const {areaCode} = ctx.request.query;
-            let address = utilx.changeAddressCodeToAddress(areaCode);
-            if(address === ""){
-                ctx.body = new ResponseBody<string>(false,'invalidCode');
+            const {keyword} = ctx.request.query;
+            const {userID} = ctx.session.data as ISession;
+            const response = await searchManufacturerOnID(keyword,userID);
+            if (response.body.data && response.body.isSuccessful) {
+                const {isSuccessful, message, data} = response.body;
+                ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message, data);
             } else {
-                ctx.body = new ResponseBody<string>(true,'getAreaNameSuccess',address);
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message);
+            }
+        }
+    });
+
+    router.get('/api/searchManufacturerNotJoin',checkDvSupSession,async (ctx)=>{
+        if (typeof ctx.request.query.keyword !== 'string') {
+            ctx.body = invalidParameter();
+        } else {
+            const {keyword} = ctx.request.query;
+            const {userID} = ctx.session.data as ISession;
+            const response = await searchManufacturerNotJoin(keyword,userID);
+            if (response.body.data && response.body.isSuccessful) {
+                const {isSuccessful, message, data} = response.body;
+                ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message, data);
+            } else {
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message);
             }
         }
     });

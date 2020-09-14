@@ -117,7 +117,7 @@ export async function listArticle(articleType: ArticleType, offset: number, limi
         attributes: {exclude: ['isInRecycleBin']},
 
     });
-    if(articleList) {
+    if (articleList) {
         let result: ArticleModel[] = [];
         articleList.forEach((item) => {
             let {ID, articleType, title, picturePath, content, createdAt, updatedAt, authorID} = item;
@@ -125,7 +125,7 @@ export async function listArticle(articleType: ArticleType, offset: number, limi
         });
         return new ResponseDB<ArticleModel[]>(true, 'listArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(false,'articleNotFound');
+        return new ResponseDB<ArticleModel[]>(false, 'articleNotFound');
     }
 }
 
@@ -141,7 +141,7 @@ export async function listDeletedArticle(articleType: ArticleType, offset: numbe
         attributes: {exclude: ['isInRecycleBin']},
 
     });
-    if(articleList) {
+    if (articleList) {
         let result: ArticleModel[] = [];
         articleList.forEach((item) => {
             const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
@@ -150,7 +150,7 @@ export async function listDeletedArticle(articleType: ArticleType, offset: numbe
         });
         return new ResponseDB<ArticleModel[]>(true, 'listDeletedArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(false,'noArticle');
+        return new ResponseDB<ArticleModel[]>(false, 'noArticle');
     }
 }
 
@@ -184,7 +184,7 @@ export async function searchArticleInfo(keyword: string, articleType: ArticleTyp
         }
     });
     let result: ArticleModel[] = [];
-    if(articleList) {
+    if (articleList) {
         articleList.forEach((item) => {
             const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
             result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
@@ -192,7 +192,32 @@ export async function searchArticleInfo(keyword: string, articleType: ArticleTyp
         });
         return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true,'searchArticleSuccess',result);
+        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+    }
+}
+
+
+export async function searchArticleInfoOnID(keyword: string, articleType: ArticleType, userID: number): Promise<ResponseDB<ArticleModel[]>> {
+    const articleList = await Article.findAll({
+        where: {
+            isInRecycleBin: false,
+            articleType: articleType,
+            [Op.or]: [
+                {title: {[Op.like]: '%' + keyword + '%'}},
+                {content: {[Op.like]: '%' + keyword + '%'}},
+            ],
+            authorID: userID,
+        }
+    });
+    let result: ArticleModel[] = [];
+    if (articleList) {
+        articleList.forEach((item) => {
+            const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
+            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+        });
+        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+    } else {
+        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
     }
 }
 
@@ -209,7 +234,7 @@ export async function searchDeletedArticleInfo(keyword: string, articleType: Art
         }
     });
     let result: ArticleModel[] = [];
-    if(articleList) {
+    if (articleList) {
         articleList.forEach((item) => {
             const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
             result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
@@ -217,7 +242,7 @@ export async function searchDeletedArticleInfo(keyword: string, articleType: Art
         });
         return new ResponseDB<ArticleModel[]>(true, 'searchDeletedArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true,'searchArticleSuccess',result);
+        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
     }
 }
 
@@ -238,7 +263,7 @@ export async function listArticleOnID(articleType: ArticleType, offset: number, 
         where: {
             articleType: articleType,
             authorID: userID,
-            isInRecycleBin:false,
+            isInRecycleBin: false,
         },
         order: ['ID'],
         offset: offset,
@@ -252,23 +277,23 @@ export async function listArticleOnID(articleType: ArticleType, offset: number, 
         })
         return new ResponseDB<ArticleModel[]>(true, 'listArticleInfoSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true, 'listArticleInfoSuccess',result);
+        return new ResponseDB<ArticleModel[]>(true, 'listArticleInfoSuccess', result);
     }
 }
 
 // addArticle('1',ArticleType.KNOWLEDGE, '1',1,"");
 
-export async function queryDeletedArticleAmount(articleType:ArticleType){
+export async function queryDeletedArticleAmount(articleType: ArticleType) {
     const articleCount = await Article.count({
-        where:{
-            articleType:articleType,
-            isInRecycleBin:true,
+        where: {
+            articleType: articleType,
+            isInRecycleBin: true,
         },
         distinct: true,
     });
-    if(articleCount){
-        return new ResponseDB<number>(true,'queryAmountSuccess',articleCount);
+    if (articleCount) {
+        return new ResponseDB<number>(true, 'queryAmountSuccess', articleCount);
     } else {
-        return new ResponseDB<number>(true,'queryAmountSuccess',0);
+        return new ResponseDB<number>(true, 'queryAmountSuccess', 0);
     }
 }
