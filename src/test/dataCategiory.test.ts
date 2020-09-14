@@ -258,7 +258,8 @@ describe("queryCategory",async ()=>{
                 categoryID:12,
             })
         expect(response.body.isSuccessful).toBe(true);
-        expect(response.body.data.categoryName).toBe("new test03");
+        console.log(response.body);
+        expect(response.body.data.dataCategoryName).toBe("new test03");
     });
 
     test("queryCategory test02",async ()=>{
@@ -270,7 +271,8 @@ describe("queryCategory",async ()=>{
                 categoryID:11,
             })
         expect(response.body.isSuccessful).toBe(true);
-        expect(response.body.data.categoryName).toBe("new test02");
+        console.log(response.body);
+        expect(response.body.data.dataCategoryName).toBe("new test02");
     })
 });
 
