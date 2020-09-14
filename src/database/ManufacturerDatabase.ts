@@ -3,7 +3,6 @@ import {Manufacturer, ManufacturerUserInfo,} from './Models/ManufacturerModel'
 import {ManufacturerInfo} from "../Class/ManufacturerInfo";
 import {Op} from 'sequelize';
 import {sequelize} from "./DB";
-import {utilx} from "../instances/utilx";
 
 export async function addManufacturer(manufacturerName: string, manufacturerTelephone: string, manufacturerIntroduction: string, manufacturerAddress: string, userID: number): Promise<ResponseDB<void>> {
     const t = await sequelize.transaction();
@@ -117,9 +116,7 @@ export async function listManufacturer(offset: number, limit: number): Promise<R
     });
     let result: ManufacturerInfo[] = [];
     manufacturerList.forEach((item) => {
-        let {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
-        let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-        manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+        const {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
         result.push(new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
     });
     return new ResponseDB<ManufacturerInfo[]>(true, 'listManufacturerInfoSuccess', result);
@@ -138,9 +135,7 @@ export async function listDeletedManufacturer(offset: number, limit: number): Pr
     });
     let result: ManufacturerInfo[] = [];
     manufacturerList.forEach((item) => {
-        let {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
-        let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-        manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+        const {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
         result.push(new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
     });
     return new ResponseDB<ManufacturerInfo[]>(true, 'listDeletedManufacturerInfoSuccess', result);
@@ -156,9 +151,7 @@ export async function searchManufacturer(keyword: string): Promise<ResponseDB<Ma
     });
     let result: ManufacturerInfo[] = [];
     manufacturerList.forEach((item) => {
-        let {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
-        let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-        manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+        const {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
         result.push(new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
     });
     return new ResponseDB<ManufacturerInfo[]>(true, 'searchManufacturerInfoSuccess', result);
@@ -175,9 +168,7 @@ export async function searchDeletedManufacturer(keyword: string): Promise<Respon
     });
     let result: ManufacturerInfo[] = [];
     manufacturerList.forEach((item) => {
-        let {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
-        let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-        manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+        const {ID, manufacturerName, manufacturerAddress, manufacturerTelephone, manufacturerIntroduction} = item;
         result.push(new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
     });
     return new ResponseDB<ManufacturerInfo[]>(true, 'searchDeletedManufacturerInfoSuccess', result);
@@ -193,9 +184,7 @@ export async function queryManufacturer(ManufacturerInfoID: number): Promise<Res
     if (manufacturer === null) {
         return new ResponseDB<ManufacturerInfo>(false, 'ManufacturerInfoNotFound');
     } else {
-        let {ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone} = manufacturer;
-        let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-        manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+        const {ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone} = manufacturer;
         return new ResponseDB<ManufacturerInfo>(true, 'queryManufacturerInfoSuccess', new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
     }
 }
@@ -285,15 +274,13 @@ export async function listManufacturerOnID(offset: number, limit: number, userID
                 }
             });
             if (manufacturer) {
-                let {ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone} = manufacturer;
-                let manufacturerAddressCode = manufacturerAddress.split(',')[0];
-                manufacturerAddress = utilx.changeAddressCodeToAddress(manufacturerAddressCode);
+                const {ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone} = manufacturer;
                 result.push(new ManufacturerInfo(ID, manufacturerName, manufacturerAddress, manufacturerIntroduction, manufacturerTelephone));
             }
         }
-        return new ResponseDB<ManufacturerInfo[]>(true, 'listManufacturerOnIDSuccess', result);
+        return new ResponseDB<ManufacturerInfo[]>(true, 'listDeletedManufacturerOnIDSuccess', result);
     } else {
-        return new ResponseDB<ManufacturerInfo[]>(true, 'listManufacturerOnIDSuccess');
+        return new ResponseDB<ManufacturerInfo[]>(true, 'listDeletedManufacturerOnIDSuccess');
     }
 }
 
