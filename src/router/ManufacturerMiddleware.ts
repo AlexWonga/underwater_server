@@ -252,5 +252,12 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/getManufacturer')
+    router.get('/api/getAreaName',async (ctx)=>{
+        if(!is_number(ctx.request.query.areaCode)){
+            ctx.body = invalidParameter();
+        } else {
+            const {areaCode} = ctx.request.query;
+
+        }
+    })
 }

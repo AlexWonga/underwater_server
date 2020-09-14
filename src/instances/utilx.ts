@@ -70,11 +70,12 @@ const utilx = (function () {
     }
 
     let changeAddressCodeToAddress = (addressCode: string): string => { //将地址代码转换为地址
-        let address:string = "";
-        for(let i=0;i<district.length;i++){
-            address = codeReflectToAddress(district[i],addressCode,address);
-            if(address!==''){
-                break;
+        let preAddressCode = addressCode.slice(0, 2)
+        let address = '';
+        for (let i = 0; i < district.length; i++) {
+            let preCode = district[i].value.slice(0, 2);
+            if (preAddressCode === preCode) {
+                address = addressCodeReflectToAddress(district[i], addressCode, address);
             }
         }
         return address;
@@ -103,25 +104,6 @@ const utilx = (function () {
 export {utilx};
 
 
-function codeReflectToAddress(item:IAddress,addressCode:string,address:string):string{
-    if(item.value === addressCode){
-        address+=item.label;
-        return address;
-    } else {
-        if(item.children){
-            address+=item.label;
-            for(let i = 0;i<item.children.length;i++){
-                address = codeReflectToAddress(item.children[i],addressCode,address);
-            }
-            return address;
-        } else {
-            return address;
-        }
-    }
-}
-
-
-
 function checkAddressCode(item: IAddress, addressCode: string) {
     if (item.value === addressCode) {
         return true;
@@ -143,4 +125,36 @@ function checkAddressCode(item: IAddress, addressCode: string) {
     }
 }
 
-console.log(utilx.changeAddressCodeToAddress("110113"));
+let addressCodeReflectToAddress = (item:IAddress,addressCode:string,address:string):string => {
+    if(item.value === addressCode){
+        address += item.label;
+        return address;
+    } else {
+        if(item.children){
+            let newAddress = "";
+            address += item.label;
+            for(let i=0;i<item.children.length;i++){
+                newAddress = addressCodeReflectToAddress(item.children[i],addressCode,address);
+                if(newAddress !== address){
+                    address = newAddress;
+                    break;
+                } else {
+                    newAddress = "";
+                }
+            }
+            if(newAddress === ""){
+                address = address.slice(0,address.indexOf(item.label));
+                return address;
+            } else {
+                return address;
+            }
+        } else {
+            return address;
+        }
+    }
+}
+
+
+
+
+
