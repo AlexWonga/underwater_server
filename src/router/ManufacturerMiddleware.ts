@@ -25,6 +25,7 @@ import {ManufacturerInfo} from "../Class/ManufacturerInfo";
 import is_number from "is-number";
 import {IContext, ISession, IState} from "../interface/session";
 import {checkType} from "../instances/checkType";
+import {utilx} from "../instances/utilx";
 
 module.exports = (router: Router<IState, IContext>) => {
     router.post('/api/addManufacturer', checkDvSupSession, async (ctx): Promise<void> => {
@@ -288,4 +289,19 @@ module.exports = (router: Router<IState, IContext>) => {
             }
         }
     });
+
+    router.get('/api/getAreaName',async (ctx)=>{
+        if(!is_number(ctx.request.query.areaCode) && typeof ctx.request.query.areaCode!=='string'){
+            ctx.body = invalidParameter();
+        } else {
+            const {areaCode} = ctx.request.query;
+            let address = utilx.changeAddressCodeToAddress(areaCode);
+            if(address === ""){
+                ctx.body = new ResponseBody<string>(false,'invalidCode');
+            } else {
+                ctx.body = new ResponseBody<string>(true,'getAreaNameSuccess',address);
+            }
+        }
+    });
+
 }
