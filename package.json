@@ -5,7 +5,8 @@
     "test": "jest --coverage",
     "prestart": "yarn build",
     "start": "nodemon dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "pm2": "pm2 start pm2.json"
   },
   "jest": {
     "verbose": true,
