@@ -26,7 +26,7 @@ export class Banner extends Model<Banner> {
 export class Footer extends Model<Footer> {
     @Column({
         primaryKey: true,
-        type: DataType.STRING(1000),
+        type: DataType.TEXT,
     })
     public richTextInfo!: string;
 }
