@@ -26,7 +26,7 @@ export class Banner extends Model<Banner> {
 export class Footer extends Model<Footer> {
     @Column({
         primaryKey: true,
-        type: DataType.TEXT,
+        type: DataType.STRING(1000),
     })
     public richTextInfo!: string;
 }
@@ -111,12 +111,12 @@ export class ContactUs extends Model<ContactUs> {
     public ID!: number;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.TEXT(),
     })
     public contactWay!: string; //联系方式
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.TEXT(),
     })
     public siteProfile!: string //网站简介
 }

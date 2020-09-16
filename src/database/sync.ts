@@ -1,4 +1,6 @@
 import {sequelize} from './DB'
-import {DeviceFile} from "./Models/DeviceModel";
-sequelize.addModels([DeviceFile]);
-DeviceFile.sync({force:true});
+import {Footer, PlatformOverview} from "./Models/SiteSettingModel";
+
+sequelize.addModels([Footer,PlatformOverview]);
+Footer.sync({force:true});
+PlatformOverview.sync({force:true});
