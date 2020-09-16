@@ -338,7 +338,7 @@ module.exports = (router: Router<IState, IContext>) => {
 
     router.post('/api/addDeviceAttachment', checkDvSupSession, async (ctx) => {
         if (ctx.request.files !== undefined) {
-            if (!is_number(ctx.request.body.deviceID !== 'number')) {
+            if (!is_number(ctx.request.body.deviceID)) {
                 ctx.body = invalidParameter();
             } else {
                 let {deviceID} = ctx.request.body;
