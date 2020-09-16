@@ -176,7 +176,9 @@ export async function deleteSlidePicture(pictureID: number): Promise<ResponseDB<
 
         if (SlidePic !== null) {
             const {picturePath} = SlidePic;
-            await fse.remove(picturePath);
+            if(await fse.pathExists(picturePath)) {
+                await fse.remove(picturePath);
+            }
             await SlidePic.destroy();
             await t.commit();
             return new ResponseDB<void>(true, 'slidePictureDeleted');
@@ -185,6 +187,7 @@ export async function deleteSlidePicture(pictureID: number): Promise<ResponseDB<
             return new ResponseDB<void>(false, 'deleteFailed');
         }
     } catch (e) {
+        console.log(e);
         await t.rollback();
         return new ResponseDB<void>(false, 'deleteFailed');
     }
