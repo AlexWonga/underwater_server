@@ -35,12 +35,12 @@ export class Article extends Model<Article> {
     title: string;
 
     @Column({
-        type: DataType.TEXT(),
+        type: DataType.TEXT({length:"long"}),
     })
     picturePath: string;
 
     @Column({
-        type: DataType.TEXT(),
+        type: DataType.TEXT({length:"long"}),
         allowNull: false,
     })
     content: string;
