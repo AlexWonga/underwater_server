@@ -101,11 +101,11 @@ module.exports = (router: Router<IContext, IState>) => {
         ctx.body = new ResponseBody(isSuccessful, message);
     });
     router.post('/api/deleteSlidePicture', checkSupervisorSession, async (ctx): Promise<void> => {
-        const {pictureID} = ctx.request.body;
-        if (typeof (pictureID) !== 'number') {
+        const {slidePictureID} = ctx.request.body;
+        if (typeof (slidePictureID) !== 'number') {
             ctx.body = invalidParameter();
         } else {
-            const response: ResponseServer<void> = await deleteSlidePicture(pictureID);
+            const response: ResponseServer<void> = await deleteSlidePicture(slidePictureID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
         }
