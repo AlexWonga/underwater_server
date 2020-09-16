@@ -100,7 +100,7 @@ module.exports = (router: Router<IContext, IState>) => {
         const {isSuccessful, message} = response.body;
         ctx.body = new ResponseBody(isSuccessful, message);
     });
-    router.delete('/api/deleteSlidePicture', checkSupervisorSession, async (ctx): Promise<void> => {
+    router.post('/api/deleteSlidePicture', checkSupervisorSession, async (ctx): Promise<void> => {
         const {pictureID} = ctx.request.body;
         if (typeof (pictureID) !== 'number') {
             ctx.body = invalidParameter();
