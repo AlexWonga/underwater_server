@@ -17,7 +17,8 @@ module.exports = (router: Router<IState, IContext>) => {
         const response = await queryBannerPicture();
         if(response.body.data&&response.body.isSuccessful) {
             let {isSuccessful, message, data} = response.body;
-            data = utilx.absoluteToNetwork(data);
+            // data = utilx.absoluteToNetwork(data);
+            data = utilx.siteSettingToNetwork(data);
             ctx.body = new ResponseBody(isSuccessful, message, data);
         } else {
             const {isSuccessful, message} = response.body;
@@ -42,7 +43,8 @@ module.exports = (router: Router<IState, IContext>) => {
         if(response.body.data && response.body.isSuccessful) {
             let {isSuccessful, message, data} = response.body;
             data.forEach((item)=>{
-                item.slidePath = utilx.absoluteToNetwork(item.slidePath);
+                // item.slidePath = utilx.absoluteToNetwork(item.slidePath);
+                item.slidePath = utilx.siteSettingToNetwork(item.slidePath);
             });
             ctx.body = new ResponseBody(isSuccessful, message, data);
         } else {

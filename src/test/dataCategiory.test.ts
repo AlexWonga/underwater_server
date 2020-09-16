@@ -277,5 +277,7 @@ describe("queryCategory",async ()=>{
 });
 
 describe("queryCategoryOpitons",async ()=>{
+    it('queryCategoryOptions',async ()=>{
 
+    })
 });

@@ -5,7 +5,7 @@ import {district} from "../static/distrcit";
 import moment from "moment";
 import {baseURL} from "../config/baseUrl";
 import {rootDirPath} from "../config/filePaths";
-
+import path from "path";
 const createDOMPurify = require('dompurify');
 const {JSDOM} = require('jsdom');
 
@@ -86,10 +86,38 @@ const utilx = (function () {
         return moment().format("YYYYMMDD");
     }
 
-    let absoluteToNetwork = (absolutePath: string): string => {
+    let absoluteToNetwork = (absolutePath: string): string => {//在使用koa-static时，将本地链接转换为网络链接
         return (absolutePath.replace(rootDirPath + '\\files', baseURL)).replace(/\\/g, "/");
     }
+
+    let siteSettingToNetwork = (absolutePath:string):string =>{
+        let fileName = getFileName(absolutePath);
+        let networkPath:string = path.join(baseURL,"siteSetting",fileName);
+        networkPath = networkPath.replace(/\\/g, "/");
+        return networkPath;
+    }
+
+    let devicePictureToNetwork = (absolutePath:string):string =>{
+        let fileName:string = getFileName(absolutePath);
+        let ext:string[] = absolutePath.split("\\");
+        let dateDir:string = ext[ext.length -2];
+        let networkPath:string = path.join(baseURL,"devicePicture",dateDir,fileName);
+        networkPath = networkPath.replace(/\\/g, "/");
+        return networkPath;
+    }
+
+    let deviceAttachmentToNetwork = (absolutePath:string):string =>{
+        let fileName:string = getFileName(absolutePath);
+        let ext:string[] = absolutePath.split("\\");
+        let dateDir:string = ext[ext.length -2];
+        let networkPath:string = path.join(baseURL,"deviceAttachment",dateDir,fileName);
+        networkPath = networkPath.replace(/\\/g, "/");
+        return networkPath;
+    }
     return {
+        deviceAttachmentToNetwork,
+        devicePictureToNetwork,
+        siteSettingToNetwork,
         changeAddressCodeToAddress,
         absoluteToNetwork,
         getTodayString,
@@ -153,8 +181,3 @@ let addressCodeReflectToAddress = (item:IAddress,addressCode:string,address:stri
         }
     }
 }
-
-
-
-
-

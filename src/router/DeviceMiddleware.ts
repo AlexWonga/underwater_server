@@ -298,7 +298,8 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await queryDeviceCover(deviceID);
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
-                data = utilx.absoluteToNetwork(data);
+                // data = utilx.absoluteToNetwork(data);
+                data = utilx.devicePictureToNetwork(data);
                 ctx.body = new ResponseBody<string>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
@@ -402,7 +403,8 @@ module.exports = (router: Router<IState, IContext>) => {
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
                 data.forEach((item) => {
-                    item = utilx.absoluteToNetwork(item);
+                    // item = utilx.absoluteToNetwork(item);
+                    item = utilx.devicePictureToNetwork(item);
                 });
                 ctx.body = new ResponseBody<string[]>(isSuccessful, message, data);
             } else {
@@ -451,7 +453,8 @@ module.exports = (router: Router<IState, IContext>) => {
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
                 data.forEach((item) => {
-                    item.filePath = utilx.absoluteToNetwork(item.filePath);
+                    // item.filePath = utilx.absoluteToNetwork(item.filePath);
+                    item.filePath = utilx.devicePictureToNetwork(item.filePath);
                 })
                 ctx.body = new ResponseBody<PictureInfo[]>(isSuccessful, message, data);
             } else {
@@ -515,7 +518,8 @@ module.exports = (router: Router<IState, IContext>) => {
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
                 data.forEach((item) => {
-                    item.filePath = utilx.absoluteToNetwork(item.filePath);
+                    // item.filePath = utilx.absoluteToNetwork(item.filePath);
+                    item.filePath = utilx.deviceAttachmentToNetwork(item.filePath);
                 })
                 ctx.body = new ResponseBody<AttachmentInfo[]>(isSuccessful, message, data);
             } else {
