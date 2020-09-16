@@ -50,9 +50,9 @@ export async function addDataCategory(dataCategoryName: string, dataType: DataTy
             dataTypeID: typeID,
         });
         if (selectList && dataType === DataTypeEnum.SELECT) { //如果有可选项，记录可选项
-            for (const item in selectList) {
+            for (let i = 0; i < selectList.length; i++) {
                 await CategoryOptions.create({
-                    optionsName: item,
+                    optionsName: selectList[i],
                     dataCategory: category,
                     categoryID: category.ID,
                 });
@@ -112,7 +112,7 @@ export async function modifyDataCategory(categoryID: number, categoryName?: stri
                     categoryID: categoryID,
                 },
             });
-            for(let i = 0;i<list.length;i++){
+            for (let i = 0; i < list.length; i++) {
                 await list[i].destroy();
             }
             let lists: Object[] = [];
