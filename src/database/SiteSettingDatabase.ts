@@ -170,7 +170,7 @@ export async function deleteSlidePicture(pictureID: number): Promise<ResponseDB<
     try {
         const SlidePic = await SlidePicture.findOne({
             where: {
-                pictureID: pictureID
+                ID: pictureID
             },
         });
 
