@@ -40,7 +40,8 @@ const utilx = (function () {
         return result;
     }
     let getFileName = (path: string) => {
-        let ext = path.split('\\');
+        // let ext = path.split('\\');//windows dev
+        let ext = path.split('/');
         return ext[ext.length - 1];
     }
 
@@ -87,31 +88,34 @@ const utilx = (function () {
     }
 
     let absoluteToNetwork = (absolutePath: string): string => {//在使用koa-static时，将本地链接转换为网络链接
-        return (absolutePath.replace(rootDirPath + '\\files', baseURL)).replace(/\\/g, "/");
+        // return (absolutePath.replace(rootDirPath + '\\files', baseURL)).replace(/\\/g, "/");
+        return (absolutePath.replace(rootDirPath + '/files', baseURL));
     }
 
     let siteSettingToNetwork = (absolutePath:string):string =>{
         let fileName = getFileName(absolutePath);
         let networkPath:string = path.join(baseURL,"siteSetting",fileName);
-        networkPath = networkPath.replace(/\\/g, "/");
+        // networkPath = networkPath.replace(/\\/g, "/");
         return networkPath;
     }
 
     let devicePictureToNetwork = (absolutePath:string):string =>{
         let fileName:string = getFileName(absolutePath);
-        let ext:string[] = absolutePath.split("\\");
+        // let ext:string[] = absolutePath.split("\\");
+        let ext:string[] = absolutePath.split("/");
         let dateDir:string = ext[ext.length -2];
         let networkPath:string = path.join(baseURL,"devicePicture",dateDir,fileName);
-        networkPath = networkPath.replace(/\\/g, "/");
+        // networkPath = networkPath.replace(/\\/g, "/");
         return networkPath;
     }
 
     let deviceAttachmentToNetwork = (absolutePath:string):string =>{
         let fileName:string = getFileName(absolutePath);
-        let ext:string[] = absolutePath.split("\\");
+        // let ext:string[] = absolutePath.split("\\");
+        let ext:string[] = absolutePath.split("/");
         let dateDir:string = ext[ext.length -2];
         let networkPath:string = path.join(baseURL,"deviceAttachment",dateDir,fileName);
-        networkPath = networkPath.replace(/\\/g, "/");
+        // networkPath = networkPath.replace(/\\/g, "/");
         return networkPath;
     }
     return {

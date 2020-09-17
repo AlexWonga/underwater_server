@@ -18,6 +18,7 @@ module.exports = (router: Router<IState, IContext>) => {
         if(response.body.data&&response.body.isSuccessful) {
             let {isSuccessful, message, data} = response.body;
             // data = utilx.absoluteToNetwork(data);
+            // console.log(data);
             data = utilx.siteSettingToNetwork(data);
             ctx.body = new ResponseBody(isSuccessful, message, data);
         } else {
