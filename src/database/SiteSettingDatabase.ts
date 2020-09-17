@@ -20,6 +20,8 @@ export async function modifyBannerPicture(picture: File): Promise<ResponseDB<voi
     try {
         const pictureName = utilx.getFileName(picture.path);
         await fse.move(picture.path, path.join(rootDirPath, dstPath, pictureName));//文件移动到指定文件夹
+        console.log(rootDirPath,dstPath,pictureName);
+        console.log(picture.path,path.join(rootDirPath, dstPath, pictureName));
         await Banner.destroy({
             where: {},
             truncate: true,
