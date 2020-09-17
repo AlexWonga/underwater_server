@@ -515,6 +515,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {deviceID} = ctx.request.query;
             deviceID = Number(deviceID);
             const response = await queryDeviceAttachment(deviceID);
+            console.log(response.body.data);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
                 data.forEach((item) => {

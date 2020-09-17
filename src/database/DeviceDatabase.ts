@@ -635,8 +635,8 @@ export async function queryDeviceStereoPicture(deviceID: number): Promise<Respon
     const device = await Device.findOne({
         where: {
             ID: deviceID,
-            order:["picturePath"],
-        }
+        },
+        order:"picturePath",
     });
 
     if (device) {

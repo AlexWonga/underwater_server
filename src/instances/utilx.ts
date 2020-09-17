@@ -112,8 +112,10 @@ const utilx = (function () {
     let deviceAttachmentToNetwork = (absolutePath:string):string =>{
         let fileName:string = getFileName(absolutePath);
         // let ext:string[] = absolutePath.split("\\");
+        console.log(fileName);
         let ext:string[] = absolutePath.split("/");
         let dateDir:string = ext[ext.length -2];
+        console.log(dateDir);
         let networkPath:string = path.join(baseURL,"deviceAttachment",dateDir,fileName);
         // networkPath = networkPath.replace(/\\/g, "/");
         return networkPath;
