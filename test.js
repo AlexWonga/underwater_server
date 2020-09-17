@@ -14,13 +14,10 @@
 //
 // console.log(utilx.deviceAttachmentToNetwork("/home/wang/WebstormProjects/underwater_rear/files/deviceFiles/devicePicture/20200917/upload_ed665e517cde056f38fe93a69c95e00a.jpeg"))
 // console.log(utilx.getFileName("/home/wang/WebstormProjects/underwater_rear/files/deviceFiles/devicePicture/20200917/upload_ed665e517cde056f38fe93a69c95e00a.jpeg"))
-import fse from "fs-extra";
-import path from "path";
-import {rootDirPath} from "./src/config/filePaths";
+var fse = require ("fs-extra");
+var path = require( "path");
 
+var rootDirPath = path.resolve(__dirname,'..','..');
 const a = path.join(rootDirPath,"files",'upload','upload_f56ca292a2dfa213cafbdd43570b0686.jpg');
 const b = path.join(rootDirPath,"files",'upload_f56ca292a2dfa213cafbdd43570b0686.jpg');
-console.log(a);
-(async ()=>{
-    await fse.move(a,b);
-})()
+fse.move(a,b);
