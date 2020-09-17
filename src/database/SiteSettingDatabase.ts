@@ -12,7 +12,8 @@ import * as fse from 'fs-extra';
 const dstPath = '/files/siteSetting';//相对路径
 import {sequelize} from "./DB";
 import {rootDirPath} from "../config/filePaths";
-
+import {log4js} from "../instances/logger";
+const logger = log4js.getLogger();
 
 export async function modifyBannerPicture(picture: File): Promise<ResponseDB<void>> {//增加首页banner图片
     const t = await sequelize.transaction();//创建事务保存在变量中
@@ -29,6 +30,7 @@ export async function modifyBannerPicture(picture: File): Promise<ResponseDB<voi
         await t.commit();//事务提交
         return new ResponseDB<void>(true, 'bannerAddSuccess');//成功时
     } catch (e) {
+        logger.error(e);
         await t.rollback();//回滚
         return new ResponseDB<void>(false, 'bannerAddFail');
     }
