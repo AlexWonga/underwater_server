@@ -17,7 +17,8 @@
 var fse = require ("fs-extra");
 var path = require( "path");
 
-var rootDirPath = path.resolve(__dirname,'..','..');
+var rootDirPath = path.resolve(__dirname);
 const a = path.join(rootDirPath,"files",'upload','upload_f56ca292a2dfa213cafbdd43570b0686.jpg');
 const b = path.join(rootDirPath,"files",'upload_f56ca292a2dfa213cafbdd43570b0686.jpg');
+
 fse.move(a,b);
