@@ -5,9 +5,11 @@ import {district} from "../static/distrcit";
 import moment from "moment";
 import {baseURL} from "../config/baseUrl";
 import {rootDirPath} from "../config/filePaths";
-import path from "path";
+
+
 const createDOMPurify = require('dompurify');
 const {JSDOM} = require('jsdom');
+import url from "url";
 
 const win = new JSDOM('').window;
 const DOMPurify = createDOMPurify(win);
@@ -92,33 +94,33 @@ const utilx = (function () {
         return (absolutePath.replace(rootDirPath + '/files', baseURL));
     }
 
-    let siteSettingToNetwork = (absolutePath:string):string =>{
+    let siteSettingToNetwork = (absolutePath: string): string => {
         let fileName = getFileName(absolutePath);
-        let networkPath:string = path.join(baseURL,"siteSetting",fileName);
+        return  url.resolve(baseURL, "/siteSetting/" + fileName);
         // networkPath = networkPath.replace(/\\/g, "/");
-        return networkPath;
+        // return networkPath;
     }
 
-    let devicePictureToNetwork = (absolutePath:string):string =>{
-        let fileName:string = getFileName(absolutePath);
+    let devicePictureToNetwork = (absolutePath: string): string => {
+        let fileName: string = getFileName(absolutePath);
         // let ext:string[] = absolutePath.split("\\");
-        let ext:string[] = absolutePath.split("/");
-        let dateDir:string = ext[ext.length -2];
-        let networkPath:string = path.join(baseURL,"devicePicture",dateDir,fileName);
+        let ext: string[] = absolutePath.split("/");
+        let dateDir: string = ext[ext.length - 2];
+        return url.resolve(baseURL, "/devicePicture/" + dateDir + "/" + fileName);
         // networkPath = networkPath.replace(/\\/g, "/");
-        return networkPath;
+        // return networkPath;
     }
 
-    let deviceAttachmentToNetwork = (absolutePath:string):string =>{
-        let fileName:string = getFileName(absolutePath);
+    let deviceAttachmentToNetwork = (absolutePath: string): string => {
+        let fileName: string = getFileName(absolutePath);
         // let ext:string[] = absolutePath.split("\\");
         console.log(fileName);
-        let ext:string[] = absolutePath.split("/");
-        let dateDir:string = ext[ext.length -2];
+        let ext: string[] = absolutePath.split("/");
+        let dateDir: string = ext[ext.length - 2];
         console.log(dateDir);
-        let networkPath:string = path.join(baseURL,"deviceAttachment",dateDir,fileName);
+        return  url.resolve(baseURL, "/deviceAttachment/" + dateDir + "/" + fileName);
         // networkPath = networkPath.replace(/\\/g, "/");
-        return networkPath;
+        // return networkPath;
     }
     return {
         deviceAttachmentToNetwork,
@@ -159,25 +161,25 @@ function checkAddressCode(item: IAddress, addressCode: string) {
     }
 }
 
-let addressCodeReflectToAddress = (item:IAddress,addressCode:string,address:string):string => {
-    if(item.value === addressCode){
+let addressCodeReflectToAddress = (item: IAddress, addressCode: string, address: string): string => {
+    if (item.value === addressCode) {
         address += item.label;
         return address;
     } else {
-        if(item.children){
+        if (item.children) {
             let newAddress = "";
             address += item.label;
-            for(let i=0;i<item.children.length;i++){
-                newAddress = addressCodeReflectToAddress(item.children[i],addressCode,address);
-                if(newAddress !== address){
+            for (let i = 0; i < item.children.length; i++) {
+                newAddress = addressCodeReflectToAddress(item.children[i], addressCode, address);
+                if (newAddress !== address) {
                     address = newAddress;
                     break;
                 } else {
                     newAddress = "";
                 }
             }
-            if(newAddress === ""){
-                address = address.slice(0,address.indexOf(item.label));
+            if (newAddress === "") {
+                address = address.slice(0, address.indexOf(item.label));
                 return address;
             } else {
                 return address;
