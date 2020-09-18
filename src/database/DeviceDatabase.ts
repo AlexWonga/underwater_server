@@ -636,14 +636,14 @@ export async function queryDeviceStereoPicture(deviceID: number): Promise<Respon
         where: {
             ID: deviceID,
         },
-        order:["picturePath"],
     });
 
     if (device) {
         const pictureList = await DevicePicture3D.findAll({
             where: {
                 deviceID: deviceID,
-            }
+            },
+            order:["picturePath"],
         });
         const result: string[] = [];
         if (pictureList) {
