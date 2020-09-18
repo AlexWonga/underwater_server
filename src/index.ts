@@ -22,7 +22,7 @@ app.use(compress({
     filter (content_type) {
         return /text/i.test(content_type)
     },
-    threshold: 2048, //bytes
+    threshold: 1024, //bytes
     gzip: {
         flush: require('zlib').constants.Z_SYNC_FLUSH
     },
