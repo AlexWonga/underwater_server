@@ -636,7 +636,7 @@ export async function queryDeviceStereoPicture(deviceID: number): Promise<Respon
         where: {
             ID: deviceID,
         },
-        order:"picturePath",
+        order:["picturePath"],
     });
 
     if (device) {
