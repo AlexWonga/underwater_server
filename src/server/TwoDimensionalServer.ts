@@ -30,7 +30,7 @@ export async function uploadTwoDimensionalData(file: File, deviceID: number, cat
             let result: twoDimensionalBody = {rowName: rowName, columnName: columnName, data: []};
             let csv = xlsx.utils.sheet_to_csv(workSheet);
             let data = csv.split('\n');
-            for (let i = 1; i < data.length; i++) {
+            for (let i = 1; i < data.length-1; i++) {
                 let numData = data[i].split(',');
                 if (!is_number(numData[0]) || !is_number(numData[1])) {
                     return invalidParameter<void>();
