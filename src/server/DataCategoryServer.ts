@@ -93,7 +93,7 @@ export async function listDeletedCategory(offset: number, limit: number, session
 }
 
 export async function searchCategory(keyword: string, sessionUserID: number): Promise<ResponseServer<DataCategory[]>> {
-    if ( keyword === '') {
+    if (keyword === '') {
         return new ResponseServer<DataCategory[]>(
             new ResponseDB(false, 'invalidParameter')
         );
@@ -110,7 +110,7 @@ export async function searchCategory(keyword: string, sessionUserID: number): Pr
 }
 
 export async function searchDeletedCategory(keyword: string, sessionUserID: number): Promise<ResponseServer<DataCategory[]>> {
-    if ( keyword === '') {
+    if (keyword === '') {
         return new ResponseServer<DataCategory[]>(
             new ResponseDB(false, 'invalidParameter')
         );
@@ -126,16 +126,9 @@ export async function searchDeletedCategory(keyword: string, sessionUserID: numb
     }
 }
 
-export async function queryCategory(categoryID: number, sessionUserID: number): Promise<ResponseServer<DataCategory>> {
-    const res = await checkDvSupSession(sessionUserID);
-    if (res.body.isSuccessful) {
-        const response = await queryCategoryDB(categoryID);
-        return new ResponseServer<DataCategory>(response);
-    } else {
-        return new ResponseServer<DataCategory>(
-            new ResponseDB<DataCategory>(false, 'invalidCall')
-        );
-    }
+export async function queryCategory(categoryID: number): Promise<ResponseServer<DataCategory>> {
+    const response = await queryCategoryDB(categoryID);
+    return new ResponseServer<DataCategory>(response);
 }
 
 export async function queryCategoryOptions(categoryID: number, sessionUserID: number): Promise<ResponseServer<string[]>> {
@@ -150,14 +143,14 @@ export async function queryCategoryOptions(categoryID: number, sessionUserID: nu
     }
 }
 
-export async function queryCategoryAmount(){
+export async function queryCategoryAmount() {
     const response = await queryCategoryAmountDB();
     return new ResponseServer<number>(response);
 }
 
-export async function queryDeletedCategoryAmount(sessionUserID:number){
+export async function queryDeletedCategoryAmount(sessionUserID: number) {
     const res = await checkSupervisorSession(sessionUserID);
-    if(res.body.isSuccessful && res.body.data){
+    if (res.body.isSuccessful && res.body.data) {
         const response = await queryDeletedCategoryAmountDB();
         return new ResponseServer<number>(response);
     } else {

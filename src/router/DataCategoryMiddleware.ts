@@ -176,7 +176,7 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/queryCategory', checkDvSupSession, async (ctx) => {
+    router.get('/api/queryCategory', async (ctx) => {
         console.log(11111);
         console.log(ctx.request.query);
         if (!is_number(ctx.request.query.categoryID)) {
@@ -184,8 +184,7 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             let {categoryID} = ctx.request.query;
             categoryID = Number(categoryID);
-            const {userID} = ctx.session.data as ISession;
-            const response = await queryCategory(categoryID, userID);
+            const response = await queryCategory(categoryID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
                 ctx.body = new ResponseBody<DataCategory>(isSuccessful, message, data);
