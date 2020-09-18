@@ -402,10 +402,9 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await queryDeviceStereoPicture(Number(deviceID));
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
-                data.forEach((item) => {
-                    // item = utilx.absoluteToNetwork(item);
-                    item = utilx.devicePictureToNetwork(item);
-                });
+                for(let i=0;i<data.length;i++){
+                    data[i] = utilx.devicePictureToNetwork(data[i]);
+                }
                 ctx.body = new ResponseBody<string[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
