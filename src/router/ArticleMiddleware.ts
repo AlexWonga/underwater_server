@@ -19,10 +19,12 @@ import {
     queryArticleAmountOnID,
     listArticleOnID,
     queryDeletedArticleAmount,
-    searchArticleInfoOnID
+    searchArticleInfoOnID,
+    queryArticlePicturePath
 } from "../server/ArticleServer";
 import {IContext, ISession, IState} from "../interface/session";
 import {utilx} from "../instances/utilx";
+import {QueryArticle} from "../Class/QueryArticle";
 
 
 module.exports = (router: Router<IState, IContext>) => {
@@ -106,10 +108,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await listArticleInfo(articleType, offset, limit);
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
         }
     });
@@ -125,10 +127,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await listDeletedArticleInfo(articleType, offset, limit, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
         }
     });
@@ -142,10 +144,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await searchArticleInfo(keyword, articleType);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
         }
     });
@@ -160,10 +162,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await searchDeletedArticleInfo(keyword, userID, articleType);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
         }
     });
@@ -215,10 +217,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await listArticleOnID(articleType, offset, limit, userID, sessionUserID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
         }
     })
@@ -249,11 +251,29 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await searchArticleInfoOnID(keyword, articleType, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message, data);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message, data);
             } else {
                 const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<Article[]>(isSuccessful, message);
+                ctx.body = new ResponseBody<QueryArticle[]>(isSuccessful, message);
             }
+        }
+    });
+
+    router.get('/api/queryArticlePicturePath', async (ctx) => {
+        if (!is_number(ctx.request.query.articleID)) {
+            ctx.body = invalidParameter();
+        } else {
+            let {articleID} = ctx.request.query;
+            articleID = Number(articleID);
+            const response = await queryArticlePicturePath(articleID);
+            if (response.body.data && response.body.isSuccessful) {
+                const {isSuccessful, message, data} = response.body;
+                ctx.body = new ResponseBody<string>(isSuccessful, message, data);
+            } else {
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<string>(isSuccessful, message);
+            }
+
         }
     });
 }

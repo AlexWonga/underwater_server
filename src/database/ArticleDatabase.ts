@@ -5,6 +5,7 @@ import {queryUserInfo} from "./UserSupervisorDatabase";
 import {sequelize} from "./DB";
 import {Article} from "./Models/ArticleModel";
 import {Op} from "sequelize";
+import {QueryArticle} from "../Class/QueryArticle";
 
 export async function addArticle(title: string, articleType: ArticleType, content: string, authorID: number, picturePath: string): Promise<ResponseDB<void>> {
     const response = await queryUserInfo(authorID);
@@ -104,7 +105,7 @@ export async function queryArticleAmount(ArticleType: ArticleType): Promise<Resp
 }
 
 
-export async function listArticle(articleType: ArticleType, offset: number, limit: number): Promise<ResponseDB<ArticleModel[]>> {
+export async function listArticle(articleType: ArticleType, offset: number, limit: number): Promise<ResponseDB<QueryArticle[]>> {
 
     const articleList = await Article.findAll({  //文章列表按照id来排序
         where: {
@@ -118,18 +119,18 @@ export async function listArticle(articleType: ArticleType, offset: number, limi
 
     });
     if (articleList) {
-        let result: ArticleModel[] = [];
+        let result: QueryArticle[] = [];
         articleList.forEach((item) => {
-            let {ID, articleType, title, picturePath, content, createdAt, updatedAt, authorID} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            let {ID, articleType, title, createdAt, updatedAt, authorID} = item;
+            result.push(new QueryArticle(ID,articleType,title,authorID,createdAt.getTime(),updatedAt.getTime()));
         });
-        return new ResponseDB<ArticleModel[]>(true, 'listArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'listArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(false, 'articleNotFound');
+        return new ResponseDB<QueryArticle[]>(false, 'articleNotFound');
     }
 }
 
-export async function listDeletedArticle(articleType: ArticleType, offset: number, limit: number): Promise<ResponseDB<ArticleModel[]>> {
+export async function listDeletedArticle(articleType: ArticleType, offset: number, limit: number): Promise<ResponseDB<QueryArticle[]>> {
     const articleList = await Article.findAll({  //文章列表按照id来排序
         where: {
             isInRecycleBin: true,
@@ -142,15 +143,15 @@ export async function listDeletedArticle(articleType: ArticleType, offset: numbe
 
     });
     if (articleList) {
-        let result: ArticleModel[] = [];
+        let result: QueryArticle[] = [];
         articleList.forEach((item) => {
-            const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            const {ID, articleType, title,authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID,articleType,title,authorID,createdAt.getTime(),updatedAt.getTime()));
 
         });
-        return new ResponseDB<ArticleModel[]>(true, 'listDeletedArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'listDeletedArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(false, 'noArticle');
+        return new ResponseDB<QueryArticle[]>(false, 'noArticle');
     }
 }
 
@@ -172,7 +173,7 @@ export async function queryArticle(articleID: number): Promise<ResponseDB<Articl
     }
 }
 
-export async function searchArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseDB<ArticleModel[]>> {
+export async function searchArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseDB<QueryArticle[]>> {
     const articleList = await Article.findAll({
         where: {
             isInRecycleBin: false,
@@ -183,21 +184,21 @@ export async function searchArticleInfo(keyword: string, articleType: ArticleTyp
             ],
         }
     });
-    let result: ArticleModel[] = [];
+    let result: QueryArticle[] = [];
     if (articleList) {
         articleList.forEach((item) => {
-            const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
 
         });
-        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchArticleSuccess', result);
     }
 }
 
 
-export async function searchArticleInfoOnID(keyword: string, articleType: ArticleType, userID: number): Promise<ResponseDB<ArticleModel[]>> {
+export async function searchArticleInfoOnID(keyword: string, articleType: ArticleType, userID: number): Promise<ResponseDB<QueryArticle[]>> {
     const articleList = await Article.findAll({
         where: {
             isInRecycleBin: false,
@@ -209,20 +210,20 @@ export async function searchArticleInfoOnID(keyword: string, articleType: Articl
             authorID: userID,
         }
     });
-    let result: ArticleModel[] = [];
+    let result: QueryArticle[] = [];
     if (articleList) {
         articleList.forEach((item) => {
-            const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
         });
-        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchArticleSuccess', result);
     }
 }
 
 
-export async function searchDeletedArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseDB<ArticleModel[]>> {
+export async function searchDeletedArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseDB<QueryArticle[]>> {
     const articleList = await Article.findAll({
         where: {
             isInRecycleBin: true,
@@ -233,16 +234,16 @@ export async function searchDeletedArticleInfo(keyword: string, articleType: Art
             ],
         }
     });
-    let result: ArticleModel[] = [];
+    let result: QueryArticle[] = [];
     if (articleList) {
         articleList.forEach((item) => {
-            const {ID, articleType, title, picturePath, content, authorID, createdAt, updatedAt} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID, articleType, title, authorID,createdAt.getTime(), updatedAt.getTime()));
 
         });
-        return new ResponseDB<ArticleModel[]>(true, 'searchDeletedArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchDeletedArticleSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true, 'searchArticleSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'searchArticleSuccess', result);
     }
 }
 
@@ -258,7 +259,7 @@ export async function queryArticleAmountOnID(articleType: ArticleType, userID: n
     return new ResponseDB<number>(true, 'amountQuerySuccess', result);
 }
 
-export async function listArticleOnID(articleType: ArticleType, offset: number, limit: number, userID: number): Promise<ResponseDB<ArticleModel[]>> {
+export async function listArticleOnID(articleType: ArticleType, offset: number, limit: number, userID: number): Promise<ResponseDB<QueryArticle[]>> {
     const ArticleList = await Article.findAll({
         where: {
             articleType: articleType,
@@ -269,15 +270,15 @@ export async function listArticleOnID(articleType: ArticleType, offset: number, 
         offset: offset,
         limit: limit,
     });
-    const result: ArticleModel[] = [];
+    const result: QueryArticle[] = [];
     if (ArticleList) {
         ArticleList.forEach((item) => {
-            const {ID, articleType, title, picturePath, authorID, content, createdAt, updatedAt} = item;
-            result.push(new ArticleModel(ID, articleType, title, picturePath, authorID, content, createdAt.getTime(), updatedAt.getTime()));
+            const {ID, articleType, title,authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
         })
-        return new ResponseDB<ArticleModel[]>(true, 'listArticleInfoSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'listArticleInfoSuccess', result);
     } else {
-        return new ResponseDB<ArticleModel[]>(true, 'listArticleInfoSuccess', result);
+        return new ResponseDB<QueryArticle[]>(true, 'listArticleInfoSuccess', result);
     }
 }
 
@@ -295,5 +296,19 @@ export async function queryDeletedArticleAmount(articleType: ArticleType) {
         return new ResponseDB<number>(true, 'queryAmountSuccess', articleCount);
     } else {
         return new ResponseDB<number>(true, 'queryAmountSuccess', 0);
+    }
+}
+
+export async function queryArticlePicturePath(articleID:number):Promise<ResponseDB<string>>{
+    const article = await Article.findOne({
+        where:{
+            ID:articleID,
+        }
+    });
+    if(article){
+        const {picturePath} = article;
+        return new ResponseDB<string>(true,'queryPicturePathSuccess',picturePath);
+    } else {
+        return new ResponseDB<string>(false,'invalidArticle');
     }
 }

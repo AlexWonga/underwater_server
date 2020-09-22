@@ -13,6 +13,7 @@ import {
     listArticleOnID as listArticleOnIDDB,
     queryDeletedArticleAmount as queryDeletedArticleAmountDB,
     searchArticleInfoOnID as searchArticleInfoOnIDDB,
+    queryArticlePicturePath as queryArticlePicturePathDB,
 } from "../database/ArticleDatabase";
 import {Article} from "../Class/Article";
 import {UserInfo} from "../Class/UserInfo";
@@ -25,6 +26,7 @@ import {ResponseDB} from "../instances/ResponseDB";
 import {IArticle} from "../Class/IArticle";
 import {checkDvSupSession, checkSupervisorSession} from "./checkPermission";
 import {permissionDeny} from "./permissionDeny";
+import {QueryArticle} from "../Class/QueryArticle";
 
 
 
@@ -135,34 +137,34 @@ export async function queryArticleAmount(articleType: ArticleType): Promise<Resp
     return new ResponseServer<number>(response);
 }
 
-export async function listArticleInfo(articleType: ArticleType, offset: number, limit: number): Promise<ResponseServer<Article[]>> {
+export async function listArticleInfo(articleType: ArticleType, offset: number, limit: number): Promise<ResponseServer<QueryArticle[]>> {
     const response = await listArticleDB(articleType, offset, limit);
-    return new ResponseServer<Article[]>(response);
+    return new ResponseServer<QueryArticle[]>(response);
 }
 
-export async function listDeletedArticleInfo(articleType: ArticleType, offset: number, limit: number, sessionUserID: number): Promise<ResponseServer<Article[]>> {
+export async function listDeletedArticleInfo(articleType: ArticleType, offset: number, limit: number, sessionUserID: number): Promise<ResponseServer<QueryArticle[]>> {
     const user = await queryUserInfo(sessionUserID);
     if ((user.data as UserInfo).userType === UserType.SUPERVISOR) {
         const response = await listDeletedArticleDB(articleType, offset, limit);
-        return new ResponseServer<Article[]>(response);
+        return new ResponseServer<QueryArticle[]>(response);
     } else {
-        return new ResponseServer<Article[]>(
-            new ResponseDB<Article[]>(false, 'invalidCall')
+        return new ResponseServer<QueryArticle[]>(
+            new ResponseDB<QueryArticle[]>(false, 'invalidCall')
         );
     }
 }
 
-export async function searchArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseServer<Article[]>> {
+export async function searchArticleInfo(keyword: string, articleType: ArticleType): Promise<ResponseServer<QueryArticle[]>> {
     if(keyword===''){
-        return new ResponseServer<Article[]>(
+        return new ResponseServer<QueryArticle[]>(
             new ResponseDB(false,'invalidParameter')
         );
     }
     const response = await searchArticleInfoDB(keyword, articleType);
-    return new ResponseServer<Article[]>(response);
+    return new ResponseServer<QueryArticle[]>(response);
 }
 
-export async function searchDeletedArticleInfo(keyword: string, sessionUserID: number, articleType: ArticleType): Promise<ResponseServer<Article[]>> {
+export async function searchDeletedArticleInfo(keyword: string, sessionUserID: number, articleType: ArticleType): Promise<ResponseServer<QueryArticle[]>> {
     const user = await queryUserInfo(sessionUserID);
     if(keyword===''){
         return new ResponseServer<Article[]>(
@@ -171,10 +173,10 @@ export async function searchDeletedArticleInfo(keyword: string, sessionUserID: n
     }
     if ((user.data as UserInfo).userType === UserType.SUPERVISOR) {
         const response = await searchDeletedArticleInfoDB(keyword, articleType);
-        return new ResponseServer<Article[]>(response);
+        return new ResponseServer<QueryArticle[]>(response);
     } else {
-        return new ResponseServer<Article[]>(
-            new ResponseDB<Article[]>(false, 'invalidCall')
+        return new ResponseServer<QueryArticle[]>(
+            new ResponseDB<QueryArticle[]>(false, 'invalidCall')
         );
     }
 }
@@ -189,18 +191,18 @@ export async function queryArticleAmountOnID(articleType: ArticleType, userID: n
     return new ResponseServer<number>(response);
 }
 
-export async function listArticleOnID(articleType: ArticleType, offset: number, limit: number, userID: number, sessionUserID: number): Promise<ResponseServer<Article[]>> {
+export async function listArticleOnID(articleType: ArticleType, offset: number, limit: number, userID: number, sessionUserID: number): Promise<ResponseServer<QueryArticle[]>> {
 
     const res = await checkDvSupSession(sessionUserID);
     if (res.body.isSuccessful && res.body.data) {//是超管 可以随意查询任意人的厂商列表
         const response = await listArticleOnIDDB(articleType, offset, limit, userID);
-        return new ResponseServer<Article[]>(response);
+        return new ResponseServer<QueryArticle[]>(response);
     } else {
         if (userID !== sessionUserID) {
-            return permissionDeny<Article[]>()
+            return permissionDeny<QueryArticle[]>()
         } else {
             const response = await listArticleOnIDDB(articleType, offset, limit, userID);
-            return new ResponseServer<Article[]>(response);
+            return new ResponseServer<QueryArticle[]>(response);
         }
     }
 }
@@ -215,7 +217,7 @@ export async function queryDeletedArticleAmount(articleType:ArticleType,sessionU
     }
 }
 
-export async function searchArticleInfoOnID(keyword:string,articleType:ArticleType,sessionUserID:number):Promise<ResponseServer<Article[]>>{
+export async function searchArticleInfoOnID(keyword:string,articleType:ArticleType,sessionUserID:number):Promise<ResponseServer<QueryArticle[]>>{
     if (keyword === '') {
         return new ResponseServer<Article[]>(
             new ResponseDB(false, 'invalidParameter')
@@ -224,8 +226,13 @@ export async function searchArticleInfoOnID(keyword:string,articleType:ArticleTy
     const res = await checkDvSupSession(sessionUserID);
     if(res.body.data && res.body.isSuccessful){
         const response = await searchArticleInfoOnIDDB(keyword,articleType,sessionUserID);
-        return new ResponseServer<Article[]>(response);
+        return new ResponseServer<QueryArticle[]>(response);
     } else {
         return permissionDeny();
     }
+}
+
+export async function queryArticlePicturePath(articleID:number){
+    const response = await queryArticlePicturePathDB(articleID);
+    return new ResponseServer<string>(response);
 }
