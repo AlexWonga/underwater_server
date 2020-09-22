@@ -115,14 +115,13 @@ export async function listArticle(articleType: ArticleType, offset: number, limi
         order: ['ID'],
         limit: limit,
         offset: offset,
-        attributes: {exclude: ['isInRecycleBin']},
-
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
     });
     if (articleList) {
         let result: QueryArticle[] = [];
         articleList.forEach((item) => {
             let {ID, articleType, title, createdAt, updatedAt, authorID} = item;
-            result.push(new QueryArticle(ID,articleType,title,authorID,createdAt.getTime(),updatedAt.getTime()));
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
         });
         return new ResponseDB<QueryArticle[]>(true, 'listArticleSuccess', result);
     } else {
@@ -139,14 +138,13 @@ export async function listDeletedArticle(articleType: ArticleType, offset: numbe
         order: ['ID'],
         limit: limit,
         offset: offset,
-        attributes: {exclude: ['isInRecycleBin']},
-
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
     });
     if (articleList) {
         let result: QueryArticle[] = [];
         articleList.forEach((item) => {
-            const {ID, articleType, title,authorID, createdAt, updatedAt} = item;
-            result.push(new QueryArticle(ID,articleType,title,authorID,createdAt.getTime(),updatedAt.getTime()));
+            const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
 
         });
         return new ResponseDB<QueryArticle[]>(true, 'listDeletedArticleSuccess', result);
@@ -182,7 +180,8 @@ export async function searchArticleInfo(keyword: string, articleType: ArticleTyp
                 {title: {[Op.like]: '%' + keyword + '%'}},
                 {content: {[Op.like]: '%' + keyword + '%'}},
             ],
-        }
+        },
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
     });
     let result: QueryArticle[] = [];
     if (articleList) {
@@ -208,7 +207,8 @@ export async function searchArticleInfoOnID(keyword: string, articleType: Articl
                 {content: {[Op.like]: '%' + keyword + '%'}},
             ],
             authorID: userID,
-        }
+        },
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
     });
     let result: QueryArticle[] = [];
     if (articleList) {
@@ -232,13 +232,14 @@ export async function searchDeletedArticleInfo(keyword: string, articleType: Art
                 {title: {[Op.like]: '%' + keyword + '%'}},
                 {content: {[Op.like]: '%' + keyword + '%'}},
             ],
-        }
+        },
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
     });
     let result: QueryArticle[] = [];
     if (articleList) {
         articleList.forEach((item) => {
             const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
-            result.push(new QueryArticle(ID, articleType, title, authorID,createdAt.getTime(), updatedAt.getTime()));
+            result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
 
         });
         return new ResponseDB<QueryArticle[]>(true, 'searchDeletedArticleSuccess', result);
@@ -266,6 +267,7 @@ export async function listArticleOnID(articleType: ArticleType, offset: number, 
             authorID: userID,
             isInRecycleBin: false,
         },
+        attributes: {exclude: ['isInRecycleBin', "content", "picturePath"]},
         order: ['ID'],
         offset: offset,
         limit: limit,
@@ -273,7 +275,7 @@ export async function listArticleOnID(articleType: ArticleType, offset: number, 
     const result: QueryArticle[] = [];
     if (ArticleList) {
         ArticleList.forEach((item) => {
-            const {ID, articleType, title,authorID, createdAt, updatedAt} = item;
+            const {ID, articleType, title, authorID, createdAt, updatedAt} = item;
             result.push(new QueryArticle(ID, articleType, title, authorID, createdAt.getTime(), updatedAt.getTime()));
         })
         return new ResponseDB<QueryArticle[]>(true, 'listArticleInfoSuccess', result);
@@ -299,16 +301,16 @@ export async function queryDeletedArticleAmount(articleType: ArticleType) {
     }
 }
 
-export async function queryArticlePicturePath(articleID:number):Promise<ResponseDB<string>>{
+export async function queryArticlePicturePath(articleID: number): Promise<ResponseDB<string>> {
     const article = await Article.findOne({
-        where:{
-            ID:articleID,
+        where: {
+            ID: articleID,
         }
     });
-    if(article){
+    if (article) {
         const {picturePath} = article;
-        return new ResponseDB<string>(true,'queryPicturePathSuccess',picturePath);
+        return new ResponseDB<string>(true, 'queryPicturePathSuccess', picturePath);
     } else {
-        return new ResponseDB<string>(false,'invalidArticle');
+        return new ResponseDB<string>(false, 'invalidArticle');
     }
 }
