@@ -132,7 +132,7 @@ export async function queryCategory(categoryID: number): Promise<ResponseServer<
 }
 
 export async function queryCategoryOptions(categoryID: number, sessionUserID: number): Promise<ResponseServer<string[]>> {
-    const res = await checkSupervisorSession(sessionUserID);
+    const res = await checkDvSupSession(sessionUserID);
     if (res.body.isSuccessful) {
         const response = await queryCategoryOptionsDB(categoryID);
         return new ResponseServer<string[]>(response);
