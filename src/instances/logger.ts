@@ -9,7 +9,7 @@ log4js.configure({
         },
         everything: {
             type: 'dateFile',
-            filename: path.join('..', 'logs', 'server'),
+            filename: path.resolve('..','..', 'logs', 'server'),
             pattern: "-yyyy-MM-dd.log",
             alwaysIncludePattern: true,
         }
