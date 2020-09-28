@@ -5,4 +5,5 @@
 
 // export const baseURL = "//127.0.0.1:8000";
 
-export const baseURL = "http://119.3.212.206";
+// export const baseURL = "http://119.3.212.206";
+export const baseURL = "http://172.6.2.180";
