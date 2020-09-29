@@ -16,8 +16,9 @@ import {SequelizeOptions} from "sequelize-typescript";
 
 
 const DatabaseConfig:SequelizeOptions = Object.freeze({
-    host: 'cdb-dooljax2.cd.tencentcdb.com',
-    port:10091,
+    // host: 'cdb-dooljax2.cd.tencentcdb.com',
+    host: '172.6.2.180',
+    port:3306,
     dialect: 'mysql',
     define: {
         charset: 'utf8',

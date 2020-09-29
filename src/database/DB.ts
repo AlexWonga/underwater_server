@@ -5,9 +5,14 @@ const sequelize = new Sequelize(
     // 'postgres',
     // 'postgres',
     // 'postgres',
-    'sys',
+
+
+    // 'sys',
+    // 'root',
+    // 'wangruifeng0001',
+    'underwater',
     'root',
-    'wangruifeng0001',
+    'mysql',
     DatabaseConfig,
 );//数据库实例
 
