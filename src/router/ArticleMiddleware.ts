@@ -88,13 +88,8 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             const {articleType} = ctx.request.query;
             const response = await queryArticleAmount(articleType);
-            if (response.body.isSuccessful && response.body.data) {
-                const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-            } else {
-                const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message);
-            }
+            const {isSuccessful, message, data} = response.body;
+            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
         }
     });
 
@@ -195,13 +190,8 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             let {userID, articleType} = ctx.request.query;
             const response = await queryArticleAmountOnID(articleType, userID);
-            if (response.body.isSuccessful && response.body.data) {
-                const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-            } else {
-                const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message);
-            }
+            const {isSuccessful, message, data} = response.body;
+            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
         }
     });
 
@@ -231,13 +221,10 @@ module.exports = (router: Router<IState, IContext>) => {
             const {articleType} = ctx.request.query;
             const {userID} = ctx.session.data as ISession;
             const response = await queryDeletedArticleAmount(articleType, userID);
-            if (response.body.isSuccessful && response.body.data) {
-                const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-            } else {
-                const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message);
-            }
+
+            const {isSuccessful, message, data} = response.body;
+            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
+
         }
     });
 

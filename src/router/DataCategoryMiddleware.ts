@@ -214,24 +214,14 @@ module.exports = (router: Router<IState, IContext>) => {
 
     router.get("/api/queryCategoryAmount", checkDvSupSession, async (ctx) => {
         const response = await queryCategoryAmount();
-        if (response.body.data && response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.get("/api/queryDeletedCategoryAmount", checkSupervisorSession, async (ctx) => {
         const {userID} = ctx.session.data as ISession;
         const response = await queryDeletedCategoryAmount(userID);
-        if (response.body.data && response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 }

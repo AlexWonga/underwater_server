@@ -236,13 +236,8 @@ module.exports = (router: Router<IState, IContext>) => {
 
     router.get('/api/queryDeviceAmount', async (ctx) => {
         const response = await queryDeviceAmount();
-        if (response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.post('/api/checkDevicePicture', checkDvSupSession, async (ctx) => {
@@ -402,7 +397,7 @@ module.exports = (router: Router<IState, IContext>) => {
             const response = await queryDeviceStereoPicture(Number(deviceID));
             if (response.body.isSuccessful && response.body.data) {
                 let {isSuccessful, message, data} = response.body;
-                for(let i=0;i<data.length;i++){
+                for (let i = 0; i < data.length; i++) {
                     data[i] = utilx.devicePictureToNetwork(data[i]);
                 }
                 ctx.body = new ResponseBody<string[]>(isSuccessful, message, data);
@@ -486,25 +481,15 @@ module.exports = (router: Router<IState, IContext>) => {
     router.get("/api/queryDeviceAmountOnID", checkDvSupSession, async (ctx) => {
         const {userID} = ctx.session.data as ISession;
         const response = await queryDeviceAmountOnID(userID);
-        if (response.body.data && response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.get('/api/queryDeletedDeviceAmount', checkSupervisorSession, async (ctx) => {
         const {userID} = ctx.session.data as ISession;
         const response = await queryDeletedDeviceAmount(userID);
-        if (response.body.isSuccessful && response.body.data) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.get('/api/queryAttachment', async (ctx) => {
@@ -559,9 +544,9 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             const {deviceID} = ctx.request.body;
             const {userID} = ctx.session.data as ISession
-            const response = await destroyDevice(deviceID,userID);
-            const {isSuccessful,message} = response.body;
-            ctx.body = new ResponseBody<void>(isSuccessful,message);
+            const response = await destroyDevice(deviceID, userID);
+            const {isSuccessful, message} = response.body;
+            ctx.body = new ResponseBody<void>(isSuccessful, message);
         }
     });
 }

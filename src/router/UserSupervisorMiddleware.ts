@@ -130,13 +130,8 @@ module.exports = (router: Router<IState, IContext>) => {
             const {userType} = ctx.request.query;
             const {userID} = ctx.session.data as ISession;
             const response = await queryUserAmount(userType, userID);
-            if (response.body.data && response.body.isSuccessful) {
-                const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-            } else {
-                const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message);
-            }
+            const {isSuccessful, message, data} = response.body;
+            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
         }
     });
 

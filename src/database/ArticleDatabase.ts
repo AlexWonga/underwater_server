@@ -294,11 +294,7 @@ export async function queryDeletedArticleAmount(articleType: ArticleType) {
         },
         distinct: true,
     });
-    if (articleCount) {
-        return new ResponseDB<number>(true, 'queryAmountSuccess', articleCount);
-    } else {
-        return new ResponseDB<number>(true, 'queryAmountSuccess', 0);
-    }
+    return new ResponseDB<number>(true, 'queryAmountSuccess', articleCount);
 }
 
 export async function queryArticlePicturePath(articleID: number): Promise<ResponseDB<string>> {

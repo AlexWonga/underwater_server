@@ -193,25 +193,17 @@ module.exports = (router: Router<IState, IContext>) => {
 
     router.get('/api/queryManufacturerInfoAmount', async (ctx) => {
         const response = await queryManufacturerInfoAmount();
-        if (response.body.data && response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.get('/api/queryDeletedManufacturerInfoAmount', checkSupervisorSession, async (ctx) => {
         const {userID} = ctx.session.data as ISession;
         const response = await queryDeletedManufacturerInfoAmount(userID);
-        if (response.body.data && response.body.isSuccessful) {
-            const {isSuccessful, message, data} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-        } else {
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<number>(isSuccessful, message);
-        }
+
+        const {isSuccessful, message, data} = response.body;
+        ctx.body = new ResponseBody<number>(isSuccessful, message, data);
+
     });
 
     router.get('/api/queryManufacturerInfoAmountOnID', async (ctx) => {
@@ -221,13 +213,8 @@ module.exports = (router: Router<IState, IContext>) => {
             let {userID} = ctx.request.query;
             userID = Number(userID);
             const response = await queryManufacturerInfoAmountInfoOnID(userID);
-            if (response.body.data && response.body.isSuccessful) {
-                const {isSuccessful, message, data} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message, data);
-            } else {
-                const {isSuccessful, message} = response.body;
-                ctx.body = new ResponseBody<number>(isSuccessful, message);
-            }
+            const {isSuccessful, message, data} = response.body;
+            ctx.body = new ResponseBody<number>(isSuccessful, message, data);
         }
     });
 
@@ -256,13 +243,13 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
 
-    router.get('/api/searchManufacturerOnID',checkDvSupSession,async (ctx)=>{
+    router.get('/api/searchManufacturerOnID', checkDvSupSession, async (ctx) => {
         if (typeof ctx.request.query.keyword !== 'string') {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
             const {userID} = ctx.session.data as ISession;
-            const response = await searchManufacturerOnID(keyword,userID);
+            const response = await searchManufacturerOnID(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
                 ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message, data);
@@ -273,13 +260,13 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/searchManufacturerNotJoin',checkDvSupSession,async (ctx)=>{
+    router.get('/api/searchManufacturerNotJoin', checkDvSupSession, async (ctx) => {
         if (typeof ctx.request.query.keyword !== 'string') {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
             const {userID} = ctx.session.data as ISession;
-            const response = await searchManufacturerNotJoin(keyword,userID);
+            const response = await searchManufacturerNotJoin(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
                 ctx.body = new ResponseBody<ManufacturerInfo[]>(isSuccessful, message, data);
@@ -290,16 +277,16 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
 
-    router.get('/api/getAreaName',async (ctx)=>{
-        if(!is_number(ctx.request.query.areaCode) && typeof ctx.request.query.areaCode!=='string'){
+    router.get('/api/getAreaName', async (ctx) => {
+        if (!is_number(ctx.request.query.areaCode) && typeof ctx.request.query.areaCode !== 'string') {
             ctx.body = invalidParameter();
         } else {
             const {areaCode} = ctx.request.query;
             let address = utilx.changeAddressCodeToAddress(areaCode);
-            if(address === ""){
-                ctx.body = new ResponseBody<string>(false,'invalidCode');
+            if (address === "") {
+                ctx.body = new ResponseBody<string>(false, 'invalidCode');
             } else {
-                ctx.body = new ResponseBody<string>(true,'getAreaNameSuccess',address);
+                ctx.body = new ResponseBody<string>(true, 'getAreaNameSuccess', address);
             }
         }
     });
