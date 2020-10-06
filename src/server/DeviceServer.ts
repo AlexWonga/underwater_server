@@ -2,7 +2,7 @@ import {DeviceData} from "../Class/DeviceData";
 import {ResponseServer} from "../instances/responseServer";
 import {Device} from "../Class/Device";
 import {File} from "formidable";
-import {maxFileSize} from "../instances/maxFileSize";
+import {maxFileSize} from "../config/maxFileSize";
 import {IDevice} from "../Class/IDevice";
 import fse from "fs-extra";
 import {

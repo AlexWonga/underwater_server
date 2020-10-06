@@ -17,6 +17,7 @@ import {SequelizeOptions} from "sequelize-typescript";
 
 const DatabaseConfig:SequelizeOptions = Object.freeze({
     // host: 'cdb-dooljax2.cd.tencentcdb.com',
+    // port:10091,
     host: 'localhost',
     port:3306,
     dialect: 'mysql',

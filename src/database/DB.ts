@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
     // 'sys',
     // 'root',
     // 'wangruifeng0001',
+
     'underwater',
     'root',
     'mysql',

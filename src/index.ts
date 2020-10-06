@@ -7,7 +7,7 @@ import serve from "koa-static";
 import helmet from "koa-helmet";
 import compress from "koa-compress";
 import {logErr} from "./router/LogError";
-import {maxFileSize} from "./instances/maxFileSize";
+import {maxFileSize} from "./config/maxFileSize";
 import {rootDirPath} from "./config/filePaths";
 //import {rateLimiterMiddleware} from "./router/rateLimiter";
 
