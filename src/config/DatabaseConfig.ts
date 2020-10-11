@@ -15,6 +15,7 @@ import {DeviceData} from "../database/Models/DeviceDataModel";
 import {SequelizeOptions} from "sequelize-typescript";
 
 
+
 const DatabaseConfig:SequelizeOptions = Object.freeze({
     // host: 'cdb-dooljax2.cd.tencentcdb.com',
     // port:10091,
@@ -24,6 +25,8 @@ const DatabaseConfig:SequelizeOptions = Object.freeze({
     define: {
         charset: 'utf8',
     },
+    timezone:"+08:00",
+
     // host: 'localhost',
     // dialect: 'postgres',
     // define: {
