@@ -7,13 +7,13 @@ const sequelize = new Sequelize(
     // 'postgres',
 
 
-    // 'sys',
-    // 'root',
-    // 'wangruifeng0001',
-
-    'underwater',
+    'sys',
     'root',
-    'mysql',
+    'wangruifeng0001',
+
+    // 'underwater',
+    // 'root',
+    // 'mysql',
     DatabaseConfig,
 );//数据库实例
 
