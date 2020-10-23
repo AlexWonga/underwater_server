@@ -5,7 +5,7 @@
 import svgCaptcha from "svg-captcha";
 import {ResponseBody} from "../instances/ResponseBody";
 import {invalidParameter} from "./invalidParameter";
-import send from "koa-send";
+
 import {
     addUserInfo,
     listUserInfo,
@@ -15,7 +15,7 @@ import {
     searchUserInfo,
     supervisorLogin,
 } from "../server/UserSupervisorServer"
-import {checkSupervisorSession, checkDvSupSession, checkSessionText} from "./checkPermissionMiddleware";
+import {checkDvSupSession, checkSessionText, checkSupervisorSession} from "./checkPermissionMiddleware";
 import Router from 'koa-router';
 import {checkType} from "../instances/checkType";
 import {checkSupervisorSession as serverCheckSupervisorSession} from "../server/checkPermission";
@@ -29,8 +29,7 @@ module.exports = (router: Router<IState, IContext>) => {
         let {text, data} = captcha;
         const session = ctx.session;
         session.text = text;
-        ctx.type = 'svg';
-        await send(ctx, data);
+        ctx.body = {svgData: data};
     });
 
     router.post('/api/supervisorLogin', checkSessionText, async (ctx): Promise<void> => {//超管登陆
