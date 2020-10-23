@@ -58,3 +58,10 @@ export async function checkDvSupSession(ctx: ParameterizedContext<IState, IConte
     }
 }
 
+export async function checkSessionText(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//检查是否存在session 以及 session中是否含有text
+    if (ctx.session === null || !ctx.session.text || ctx.session.isNew) {//先检测session是否为空
+        ctx.body = new ResponseBody(false, 'invalidCall');
+    } else {
+        await next();
+    }
+}

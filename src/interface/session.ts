@@ -13,6 +13,7 @@ export interface IState {
 
 interface mySession extends Session {
     data: ISession | null;
+    text: string | null;
     isNew: boolean;
 }
 

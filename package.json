@@ -63,7 +63,10 @@
     "sequelize-typescript": "1.1.0",
     "typescript": "3.8.3",
     "xlsx": "0.16.6",
-    "yaml": "^1.10.0"
+    "yaml": "^1.10.0",
+    "svg-captcha": "1.4.0",
+    "koa-send": "5.0.1",
+    "@types/koa-send": "4.1.2"
   },
   "devDependencies": {
     "@babel/preset-env": "7.11.5",

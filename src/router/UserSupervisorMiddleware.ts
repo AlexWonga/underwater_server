@@ -2,9 +2,10 @@
  * 所有的类型断言已经在上一中间件中确认过
  */
 
-
+import svgCaptcha from "svg-captcha";
 import {ResponseBody} from "../instances/ResponseBody";
 import {invalidParameter} from "./invalidParameter";
+import send from "koa-send";
 import {
     addUserInfo,
     listUserInfo,
@@ -14,7 +15,7 @@ import {
     searchUserInfo,
     supervisorLogin,
 } from "../server/UserSupervisorServer"
-import {checkSupervisorSession, checkDvSupSession} from "./checkPermissionMiddleware";
+import {checkSupervisorSession, checkDvSupSession, checkSessionText} from "./checkPermissionMiddleware";
 import Router from 'koa-router';
 import {checkType} from "../instances/checkType";
 import {checkSupervisorSession as serverCheckSupervisorSession} from "../server/checkPermission";
@@ -23,11 +24,24 @@ import is_number from "is-number";
 import {IContext, ISession, IState} from "../interface/session";
 
 module.exports = (router: Router<IState, IContext>) => {
-    router.post('/api/supervisorLogin', async (ctx): Promise<void> => {//超管登陆
-        if (typeof (ctx.request.body.username) !== "string" || typeof (ctx.request.body.password) !== "string") {//检查参数类型
+    router.get('/api/captcha', async (ctx) => {
+        let captcha = svgCaptcha.create();
+        let {text, data} = captcha;
+        const session = ctx.session;
+        session.text = text;
+        ctx.type = 'svg';
+        await send(ctx, data);
+    });
+
+    router.post('/api/supervisorLogin', checkSessionText, async (ctx): Promise<void> => {//超管登陆
+        if (typeof (ctx.request.body.username) !== "string" || typeof (ctx.request.body.password) !== "string" || typeof (ctx.request.body.code) !== "string") {//检查参数类型 code是图形验证码的答案
             ctx.body = invalidParameter();
         } else {
-            const {username, password} = ctx.request.body;//从请求中取出用户名与密码
+            const {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
+            const text = ctx.session.text;
+            if (text !== code) {
+                ctx.body = new ResponseBody<void>(false, 'wrongVerificationCode');
+            }
             //console.log(username, password);
             const response = await supervisorLogin(username, password);//服务层返回的response
             if (response.session) {//如果session不为空 就设置session
