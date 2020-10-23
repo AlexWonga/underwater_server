@@ -27,8 +27,7 @@ module.exports = (router: Router<IState, IContext>) => {
     router.get('/api/captcha', async (ctx) => {
         let captcha = svgCaptcha.create();
         let {text, data} = captcha;
-        const session = ctx.session;
-        session.text = text;
+        ctx.session.text = text;
         ctx.body = {svgData: data};
     });
 
@@ -36,18 +35,19 @@ module.exports = (router: Router<IState, IContext>) => {
         if (typeof (ctx.request.body.username) !== "string" || typeof (ctx.request.body.password) !== "string" || typeof (ctx.request.body.code) !== "string") {//检查参数类型 code是图形验证码的答案
             ctx.body = invalidParameter();
         } else {
-            const {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
+            let {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
             const text = ctx.session.text;
-            if (text !== code) {
+            if (text === null || text.toLowerCase() !== code.toString().toLowerCase()) {
                 ctx.body = new ResponseBody<void>(false, 'wrongVerificationCode');
+            } else {
+                //console.log(username, password);
+                const response = await supervisorLogin(username, password);//服务层返回的response
+                if (response.session) {//如果session不为空 就设置session
+                    ctx.session.data = response.session;
+                }
+                const {isSuccessful, message} = response.body;
+                ctx.body = new ResponseBody<void>(isSuccessful, message);
             }
-            //console.log(username, password);
-            const response = await supervisorLogin(username, password);//服务层返回的response
-            if (response.session) {//如果session不为空 就设置session
-                ctx.session.data = response.session;
-            }
-            const {isSuccessful, message} = response.body;
-            ctx.body = new ResponseBody<void>(isSuccessful, message);
         }
         // await next();
     });
