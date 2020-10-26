@@ -17,7 +17,7 @@ export async function queryUserInfo(UserID: number): Promise<ResponseDB<UserInfo
     if (User === null) {
         return new ResponseDB<UserInfoModel>(false, 'userNotFound');
     } else {
-        const {ID, username,password, telephone, email, userType, lastLogin, createdAt} = User;
+        const {ID, username, password, telephone, email, userType, lastLogin, createdAt} = User;
         let result = new UserInfoModel(ID, username, password, telephone, email, userType, lastLogin.getTime(), createdAt.getTime());
         return new ResponseDB<UserInfoModel>(true, 'queryUserInfoSuccess', result);
     }
@@ -75,6 +75,7 @@ export async function addUser(username: string, UserType: UserType, password: st
             telephone: telephone,
             email: email,
             userType: UserType,
+            lastLogin: new Date(),
         });
         if (user) {
             return new ResponseDB<void>(true, 'addUserSuccess');
@@ -103,7 +104,7 @@ export async function modifyUserInfo(ID: number, username: string, UserType: Use
         if (tempUser === null) {
             return new ResponseDB<void>(false, 'userNotFound');
         } else {
-            if ( password === '') {
+            if (password === '') {
                 return new ResponseDB<void>(false, 'invalidPassword');
             }
             tempUser.userType = UserType;

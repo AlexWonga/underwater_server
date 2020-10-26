@@ -54,7 +54,7 @@ export class UserInfo extends Model<UserInfo> {
 
     @Column({
         type: DataType.DATE(),
-        defaultValue: new Date(),
+        allowNull: false,
     })
     lastLogin: Date;
 
