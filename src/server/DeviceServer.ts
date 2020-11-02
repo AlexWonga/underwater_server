@@ -47,7 +47,6 @@ import {AttachmentInfo} from "../Class/AttachmentInfo";
 import is_number from "is-number";
 
 
-
 export async function supervisorAddDevice(deviceName: string, manufacturerID: number, sessionUserID: number, deviceAdminID?: number, deviceDataList?: DeviceData[]): Promise<ResponseServer<number>> {
     const res = await checkSupervisorSession(sessionUserID);
     if (res.body.data && res.body.isSuccessful) {//是超管
@@ -301,20 +300,20 @@ export async function queryDeviceCover(deviceID: number): Promise<ResponseServer
     return new ResponseServer<string>(response);
 }
 
-export async function checkDeviceAttachment(deviceID: number, sessionUserID: number, fileSizes: number[]): Promise<ResponseServer<void>> {
+export async function checkDeviceAttachment(deviceID: number, fileNames: string[], sessionUserID: number, fileSizes: number[]): Promise<ResponseServer<void>> {
     const res = await checkDvSupSession(sessionUserID);
     if (res.body.isSuccessful) {
         const device = await queryDeviceDB(deviceID);
         if (device) {
 
-            // for (let i = 0; i < fileNames.length; i++) {
-            //     if (!utilx.checkAttachmentString(fileNames[i])) {
-            //         return new ResponseServer<void>(
-            //             new ResponseDB<void>(false, 'invalidFileType')
-            //         );
-            //     }
-            // }
-            let sum:number = 0;
+            for (let i = 0; i < fileNames.length; i++) {
+                if (!utilx.checkAttachmentString(fileNames[i])) {
+                    return new ResponseServer<void>(
+                        new ResponseDB<void>(false, 'invalidFileType')
+                    );
+                }
+            }
+            let sum: number = 0;
             for (let i = 0; i < fileSizes.length; i++) {
                 sum += fileSizes[i];
             }
@@ -616,26 +615,26 @@ export async function checkDeviceStereoPicture(deviceID: number, fileNames: stri
     if (res.body.isSuccessful && res.body.data) {
         const device = await queryDeviceDB(deviceID);
         if (device) {
-            let flag :boolean = true;
+            let flag: boolean = true;
             fileNames.forEach((item) => {
                 let ext = item.split('.');
                 let trueName = ext[0];//获得真实名字：排除后缀名
-                if(!is_number(trueName)){
+                if (!is_number(trueName)) {
                     flag = false;
                 }
             });
-            if(!flag){
+            if (!flag) {
                 return new ResponseServer(
-                    new ResponseDB(false,'invalidPictureName')
+                    new ResponseDB(false, 'invalidPictureName')
                 );
             }
-            let sum:number = 0;
-            fileSizes.forEach((item)=>{
-                sum +=item;
+            let sum: number = 0;
+            fileSizes.forEach((item) => {
+                sum += item;
             })
-            if(sum>maxFileSize){
+            if (sum > maxFileSize) {
                 return new ResponseServer(
-                    new ResponseDB(false,'invalidFileSize')
+                    new ResponseDB(false, 'invalidFileSize')
                 );
             }
             return new ResponseServer<void>(
@@ -651,9 +650,9 @@ export async function checkDeviceStereoPicture(deviceID: number, fileNames: stri
     }
 }
 
-export async function destroyDevice(deviceID:number,sessionUserID:number){
+export async function destroyDevice(deviceID: number, sessionUserID: number) {
     const res = await checkDvSupSession(sessionUserID);
-    if(res.body.isSuccessful && res.body.data){
+    if (res.body.isSuccessful && res.body.data) {
         const response = await destroyDeviceDB(deviceID);
         return new ResponseServer<void>(response);
     } else {
@@ -661,15 +660,15 @@ export async function destroyDevice(deviceID:number,sessionUserID:number){
     }
 }
 
-export async function searchDeviceOnID(keyword:string,sessionUserID:number){
+export async function searchDeviceOnID(keyword: string, sessionUserID: number) {
     if (keyword === '') {
         return new ResponseServer<Device[]>(
             new ResponseDB(false, 'invalidParameter')
         );
     }
     const res = await checkDvSupSession(sessionUserID);
-    if(res.body.isSuccessful && res.body.data){
-        const response = await searchDeviceOnIDDB(keyword,sessionUserID);
+    if (res.body.isSuccessful && res.body.data) {
+        const response = await searchDeviceOnIDDB(keyword, sessionUserID);
         return new ResponseServer<Device[]>(response);
     } else {
         return permissionDeny<Device[]>();

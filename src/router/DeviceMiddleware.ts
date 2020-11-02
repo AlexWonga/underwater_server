@@ -326,14 +326,15 @@ module.exports = (router: Router<IState, IContext>) => {
             }
             deviceID = Number(deviceID);
             const {userID} = ctx.session.data as ISession;
-            const response = await checkDeviceAttachment(deviceID, userID, fileSizes);
+            const response = await checkDeviceAttachment(deviceID, fileNames, userID, fileSizes);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
         }
     });
 
     router.post('/api/addDeviceAttachment', checkDvSupSession, async (ctx) => {
-        if (ctx.request.files !== undefined) {
+        // @ts-ignore
+        if (ctx.request.files !== undefined && !utilx.checkAttachment(ctx.request.files)) {
             if (!is_number(ctx.request.body.deviceID)) {
                 ctx.body = invalidParameter();
             } else {
@@ -345,6 +346,8 @@ module.exports = (router: Router<IState, IContext>) => {
                 const {isSuccessful, message} = response.body;
                 ctx.body = new ResponseBody<void>(isSuccessful, message);
             }
+        } else {
+            ctx.body = new ResponseBody(false, 'invalidFileType');
         }
     });
 
