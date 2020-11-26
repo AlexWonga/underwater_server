@@ -6,7 +6,7 @@ import {
 import {ContactUs} from "../Class/ContactUs";
 import {SlidePicture} from "../Class/SlidePicture";
 import {RelatedLink} from "../Class/RelatedLink";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 
 export async function queryBannerPicture(): Promise<ResponseServer<string>> {
     const DBResponse = await queryBannerPictureDB();

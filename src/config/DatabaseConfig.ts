@@ -15,23 +15,37 @@ import {DeviceData} from "../database/Models/DeviceDataModel";
 import {SequelizeOptions} from "sequelize-typescript";
 
 
-
-const DatabaseConfig:SequelizeOptions = Object.freeze({
-    host: 'cdb-dooljax2.cd.tencentcdb.com',
-    port:10091,
-    // host: 'localhost',
-    // port:3306,
-    dialect: 'mysql',
-    define: {
-        charset: 'utf8',
-    },
-    timezone:"+08:00",
+const DatabaseConfig: SequelizeOptions = Object.freeze({
+    // host: 'cdb-dooljax2.cd.tencentcdb.com',
+    // port:10091,
+    // // host: 'localhost',
+    // // port:3306,
+    // dialect: 'mysql',
+    // define: {
+    //     charset: 'utf8',
+    // },
+    // timezone:"+08:00",
 
     // host: 'localhost',
     // dialect: 'postgres',
     // define: {
     //     charset: 'utf8',
     // },
+    // timezone:"+08:00",
+
+    host: "47.98.161.140",
+    dialect: "mysql",
+    define: {
+        charset: "utf8",
+    },
+    timezone: "+8:00",
+    pool: {
+        max: 10,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+    },
+
     models: [Article, DataCategory, DataType, Device, DevicePicture, DeviceFile, DevicePicture3D,
         Manufacturer, ManufacturerUserInfo, Banner, SlidePicture, ContactUs, RelatedLinks, PlatformOverview, Footer,
         UserInfo, DeviceData, CategoryOptions]

@@ -7,7 +7,6 @@ import {UserInfo} from "./UserSupervisorModel";
     tableName: 'Article',
     freezeTableName: true
 })
-
 export class Article extends Model<Article> {
     @Column({
         type: DataType.INTEGER,

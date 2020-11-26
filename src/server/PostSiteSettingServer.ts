@@ -1,4 +1,4 @@
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {ContactUs} from "../Class/ContactUs";
 import {RelatedLink} from "../Class/RelatedLink";
 import {File} from "formidable";

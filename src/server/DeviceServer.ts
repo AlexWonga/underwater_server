@@ -1,5 +1,5 @@
 import {DeviceData} from "../Class/DeviceData";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {Device} from "../Class/Device";
 import {File} from "formidable";
 import {maxFileSize} from "../config/maxFileSize";

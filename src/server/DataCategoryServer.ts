@@ -1,5 +1,5 @@
 import {DataType} from "../Enum/DataType";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {DataCategory} from "../Class/DataCategory";
 import {
     addDataCategory as addDataCategoryDB,

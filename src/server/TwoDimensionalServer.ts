@@ -3,7 +3,7 @@ import {checkDvSupSession} from "./checkPermission";
 import {permissionDeny} from "./permissionDeny";
 import {invalidParameter} from "./invalidParameter";
 // import {twoDimensionalData,twoDimensionalBody} from "../interface/twoDiimensional";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import xlsx from "xlsx";
 import {
     uploadTwoDimensionalData as uploadTwoDimensionalDataDB,

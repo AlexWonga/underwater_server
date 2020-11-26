@@ -1,4 +1,4 @@
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {
     addManufacturer as addManufacturerDB,
     deletedManufacturerRecover as deletedManufacturerRecoverDB,

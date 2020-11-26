@@ -19,7 +19,7 @@ import {Article} from "../Class/Article";
 import {UserInfo} from "../Class/UserInfo";
 import {ArticleType} from "../Enum/ArticleType";
 import {UserType} from "../Enum/UserType";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {JSDOM} from 'jsdom';
 import {queryUserInfo} from "../database/UserSupervisorDatabase";
 import {ResponseDB} from "../instances/ResponseDB";

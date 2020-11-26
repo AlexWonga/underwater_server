@@ -4,7 +4,7 @@ import {UserInfo as UserInfoModel} from "../Class/UserInfo";
 import {sequelize} from "./DB";
 import {UserInfo} from "./Models/UserSupervisorModel";
 import {Op} from "sequelize";
-
+import moment from "moment";
 
 export async function queryUserInfo(UserID: number): Promise<ResponseDB<UserInfoModel>> {//根据id查询用户
     const User = await UserInfo.findOne({
@@ -36,9 +36,7 @@ export async function supervisorLogin(username: string, password: string): Promi
         return new ResponseDB<UserInfoModel>(false, 'userNotFound');
     } else if (UserA.password !== password) {
         return new ResponseDB<UserInfoModel>(false, 'wrongPassword');
-    }
-    //console.log(UserB);
-    else if (UserA.userType !== 'SUPERVISOR') {
+    } else if (UserA.userType !== 'SUPERVISOR') {
         return new ResponseDB<UserInfoModel>(false, 'invalidUserType');
     } else {
         UserA.lastLogin = new Date();
@@ -51,21 +49,6 @@ export async function supervisorLogin(username: string, password: string): Promi
 
 }
 
-// supervisorLogin("admin",'123456')
-// queryUserInfo(1);
-// (async function CreateAdmin() {
-//     await UserInfo.sync({force: true});
-//     const admin = await UserInfo.create({
-//         ID: 1,
-//         username: 'admin',
-//         password: '123456',
-//         telephone: '13944648135',
-//         email: '494217470@qq.com',
-//         userType: 'SUPERVISOR',
-//         lastLogin:new Date(),
-//     });
-//     console.log(admin.toJSON());
-// })()
 
 export async function addUser(username: string, UserType: UserType, password: string, telephone: string, email: string): Promise<ResponseDB<void>> {
     try {
@@ -75,7 +58,7 @@ export async function addUser(username: string, UserType: UserType, password: st
             telephone: telephone,
             email: email,
             userType: UserType,
-            lastLogin: new Date(),
+            lastLogin: moment().format(),
         });
         if (user) {
             return new ResponseDB<void>(true, 'addUserSuccess');

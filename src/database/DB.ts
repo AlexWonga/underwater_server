@@ -5,11 +5,12 @@ const sequelize = new Sequelize(
     // 'postgres',
     // 'postgres',
     // 'postgres',
-
-
-    'sys',
+    'underwater',
     'root',
     'wangruifeng0001',
+    // 'sys',
+    // 'root',
+    // 'wangruifeng0001',
 
     // 'underwater',
     // 'root',
@@ -19,5 +20,7 @@ const sequelize = new Sequelize(
 
 //sequelize.addModels([path.join(__dirname,'Models')]);
 export {sequelize};
+
+
 
 

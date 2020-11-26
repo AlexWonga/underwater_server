@@ -1,4 +1,4 @@
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {checkSuperVisorPermission} from '../database/checkPermissionDatabase'
 import {checkDvSupSession as checkDvSupSessionDB} from "../database/checkPermissionDatabase";
 import {UserInfo} from "../database/Models/UserSupervisorModel";

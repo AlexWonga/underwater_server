@@ -1,4 +1,4 @@
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {ResponseDB} from "../instances/ResponseDB";
 import {UserLogin as UserLoginDB} from "../database/UserDatabase";
 import {ISession} from "../interface/session";

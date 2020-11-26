@@ -12,7 +12,7 @@ import {
 } from "../server/PostSiteSettingServer";
 import {utilx} from "../instances/utilx";
 import {checkSupervisorSession} from "./checkPermissionMiddleware";
-import {ResponseServer} from "../instances/responseServer";
+import {ResponseServer} from "../instances/ResponseServer";
 import {IContext, IState} from "../interface/session";
 
 
