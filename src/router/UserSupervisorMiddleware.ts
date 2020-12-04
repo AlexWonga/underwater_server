@@ -38,7 +38,7 @@ module.exports = (router: Router<IState, IContext>) => {
             const text = ctx.session.text;
             if (text === null || text.toLowerCase() !== code.toString().toLowerCase()) {
                 const svgData = await changeCapcha(ctx);
-                ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode',svgData);
+                ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode', svgData);
             } else {
                 const response = await supervisorLogin(username, password);//服务层返回的response
                 if (response.session) {//如果session不为空 就设置session
@@ -154,7 +154,7 @@ module.exports = (router: Router<IState, IContext>) => {
 
 
     router.get('/api/logout', async (ctx): Promise<void> => {
-        ctx.session.destory();
+        ctx.session = null;
         ctx.body = new ResponseBody<void>(true, 'logoutSuccess');
     });
 
