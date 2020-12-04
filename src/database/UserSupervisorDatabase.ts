@@ -32,12 +32,8 @@ export async function supervisorLogin(username: string, password: string): Promi
             },
         }
     );
-    if (UserA === null) {
-        return new ResponseDB<UserInfoModel>(false, 'userNotFound');
-    } else if (UserA.password !== password) {
-        return new ResponseDB<UserInfoModel>(false, 'wrongPassword');
-    } else if (UserA.userType !== 'SUPERVISOR') {
-        return new ResponseDB<UserInfoModel>(false, 'invalidUserType');
+    if (UserA === null || UserA.password !== password || UserA.userType !== 'SUPERVISOR') {
+        return new ResponseDB<UserInfoModel>(false, 'wrongUserOrPassword');
     } else {
         UserA.lastLogin = new Date();
         await UserA.save();

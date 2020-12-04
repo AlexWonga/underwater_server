@@ -45,7 +45,7 @@ module.exports = (router: Router<IState, IContext>) => {
                     ctx.session.data = response.session;
                 }
                 const {isSuccessful, message} = response.body;
-                if (!isSuccessful && message === "wrongPassword") {
+                if (!isSuccessful) {
                     const svgData = await changeCapcha(ctx);
                     ctx.body = new ResponseBody<string>(isSuccessful, message, svgData);
                 } else {
