@@ -154,7 +154,8 @@ module.exports = (router: Router<IState, IContext>) => {
 
 
     router.get('/api/logout', async (ctx): Promise<void> => {
-        ctx.session = null;
+        ctx.session.data = null;
+        ctx.session.text = null;
         ctx.body = new ResponseBody<void>(true, 'logoutSuccess');
     });
 

@@ -15,7 +15,6 @@ interface mySession extends Session {
     data: ISession | null;
     text: string | null;
     isNew: boolean;
-    destory: Function;
 }
 
 export interface IContext {
