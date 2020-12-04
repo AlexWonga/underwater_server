@@ -47,9 +47,10 @@ module.exports = (router: Router<IState, IContext>) => {
                 const {isSuccessful, message} = response.body;
                 if (!isSuccessful && message === "wrongPassword") {
                     let captcha = svgCaptcha.create();
-                    let {text, data} = captcha;
+                    const text = captcha.text;
+                    const svgData = captcha.data;
                     ctx.session.text = text;
-                    ctx.body = {boolean: isSuccessful, string: message, svgData: data};
+                    ctx.body = new ResponseBody<string>(isSuccessful, message, svgData);
                 } else {
                     ctx.body = new ResponseBody<void>(isSuccessful, message);
                 }
