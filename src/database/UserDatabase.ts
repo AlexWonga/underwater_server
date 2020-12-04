@@ -3,7 +3,7 @@ import {ResponseDB} from "../instances/ResponseDB";
 import {UserType} from "../Enum/UserType";
 import {UserInfo as UserInfoModel} from "../Class/UserInfo";
 
-export async function UserLogin(username: string, password: string): Promise<ResponseDB<UserInfoModel>> {
+export async function userLogin(username: string, password: string): Promise<ResponseDB<UserInfoModel>> {
     const User = await UserInfo.findOne({
         where: {
             username: username,

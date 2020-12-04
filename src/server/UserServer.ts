@@ -1,11 +1,11 @@
 import {ResponseServer} from "../instances/ResponseServer";
 import {ResponseDB} from "../instances/ResponseDB";
-import {UserLogin as UserLoginDB} from "../database/UserDatabase";
+import {userLogin as userLoginDB} from "../database/UserDatabase";
 import {ISession} from "../interface/session";
 
 
-export async function UserLogin(username: string, password: string): Promise<ResponseServer<void>> {
-    const resultDB = await UserLoginDB(username, password);
+export async function userLogin(username: string, password: string): Promise<ResponseServer<void>> {
+    const resultDB = await userLoginDB(username, password);
     const {isSuccessful, message} = resultDB;
     if (!isSuccessful || !resultDB.data) {
         return new ResponseServer<void>(new ResponseDB<void>(isSuccessful, message));

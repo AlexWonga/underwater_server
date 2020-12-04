@@ -2,7 +2,7 @@
  * 所有的类型断言已经在上一中间件中确认过
  */
 
-import svgCaptcha from "svg-captcha";
+
 import {ResponseBody} from "../instances/ResponseBody";
 import {invalidParameter} from "./invalidParameter";
 
@@ -22,12 +22,11 @@ import {checkSupervisorSession as serverCheckSupervisorSession} from "../server/
 import {UserInfo} from "../Class/UserInfo";
 import is_number from "is-number";
 import {IContext, ISession, IState} from "../interface/session";
+import {changeCapcha} from "./createCapcha";
 
 module.exports = (router: Router<IState, IContext>) => {
     router.get('/api/captcha', async (ctx) => {
-        let captcha = svgCaptcha.create();
-        let {text, data} = captcha;
-        ctx.session.text = text;
+        const data = await changeCapcha(ctx);
         ctx.body = {svgData: data};
     });
 
@@ -38,7 +37,8 @@ module.exports = (router: Router<IState, IContext>) => {
             let {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
             const text = ctx.session.text;
             if (text === null || text.toLowerCase() !== code.toString().toLowerCase()) {
-                ctx.body = new ResponseBody<void>(false, 'wrongVerificationCode');
+                const svgData = await changeCapcha(ctx);
+                ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode',svgData);
             } else {
                 const response = await supervisorLogin(username, password);//服务层返回的response
                 if (response.session) {//如果session不为空 就设置session
@@ -46,10 +46,7 @@ module.exports = (router: Router<IState, IContext>) => {
                 }
                 const {isSuccessful, message} = response.body;
                 if (!isSuccessful && message === "wrongPassword") {
-                    let captcha = svgCaptcha.create();
-                    const text = captcha.text;
-                    const svgData = captcha.data;
-                    ctx.session.text = text;
+                    const svgData = await changeCapcha(ctx);
                     ctx.body = new ResponseBody<string>(isSuccessful, message, svgData);
                 } else {
                     ctx.body = new ResponseBody<void>(isSuccessful, message);
