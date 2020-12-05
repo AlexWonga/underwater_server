@@ -49,6 +49,7 @@ module.exports = (router: Router<IState, IContext>) => {
                     const svgData = await changeCapcha(ctx);
                     ctx.body = new ResponseBody<string>(isSuccessful, message, svgData);
                 } else {
+                    await changeCapcha(ctx);
                     ctx.body = new ResponseBody<void>(isSuccessful, message);
                 }
             }
