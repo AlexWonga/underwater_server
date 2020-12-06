@@ -1,21 +1,20 @@
-import redis from "redis";
+// import redis from "redis";
 import {RateLimiterMemory} from "rate-limiter-flexible";
 import {ParameterizedContext} from "koa";
 import {IContext, IState} from "../interface/session";
 
 
-export const client = redis.createClient({
-    host: 'localhost',
-    port: 6379,
-    enable_offline_queue: false,
-});
+// export const client = redis.createClient({
+//     host: 'localhost',
+//     port: 6379,
+//     enable_offline_queue: false,
+// });
 
-client.on("error", function (err) {
-    console.log("Redis error encountered", err);
-});
+// client.on("error", function (err) {
+//     console.log("Redis error encountered", err);
+// });
 
 const rateLimiter = new RateLimiterMemory({
-
     keyPrefix: 'middleware',
     points: 20,
     duration: 60,
