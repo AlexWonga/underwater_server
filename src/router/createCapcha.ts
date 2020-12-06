@@ -5,6 +5,6 @@ import svgCaptcha from "svg-captcha";
 export async function changeCapcha(ctx: ParameterizedContext<IState, IContext>): Promise<string> {
     let captcha = svgCaptcha.create();
     let {text,data} = captcha;
-    ctx.session.text = text;
+    ctx.session!.text = text;
     return data;
 }

@@ -44,7 +44,7 @@ const utilx = (function () {
             }
 
             let clear = (...s: string[]) => {
-                const result = [];
+                const result:string[] = [];
                 for (let i = 0; i < s.length; i++) {
                     result.push(DOMPurify.sanitize(s[i]));
                 }

@@ -5,7 +5,7 @@
 
 import {ResponseBody} from "../instances/ResponseBody";
 import {invalidParameter} from "./invalidParameter";
-
+import svgCaptcha from "svg-captcha";
 import {
     addUserInfo,
     listUserInfo,
@@ -21,7 +21,7 @@ import {checkType} from "../instances/checkType";
 import {checkSupervisorSession as serverCheckSupervisorSession} from "../server/checkPermission";
 import {UserInfo} from "../Class/UserInfo";
 import is_number from "is-number";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext,  IState} from "../interface/session";
 import {changeCapcha} from "./createCapcha";
 
 module.exports = (router: Router<IState, IContext>) => {
@@ -35,21 +35,23 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
-            const text = ctx.session.text;
+            const text = ctx.session!.text;
             if (text === null || text.toLowerCase() !== code.toString().toLowerCase()) {
-                const svgData = await changeCapcha(ctx);
-                ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode', svgData);
+                const svgData = svgCaptcha.create();
+                ctx.session!.text = svgData.text;
+                ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode', svgData.data);
             } else {
                 const response = await supervisorLogin(username, password);//服务层返回的response
-                if (response.session) {//如果session不为空 就设置session
-                    ctx.session.data = response.session;
-                }
                 const {isSuccessful, message} = response.body;
                 if (!isSuccessful) {
-                    const svgData = await changeCapcha(ctx);
-                    ctx.body = new ResponseBody<string>(isSuccessful, message, svgData);
+                    const svgData = svgCaptcha.create();
+                    ctx.session!.text = svgData.text;
+                    ctx.body = new ResponseBody<string>(isSuccessful, message, svgData.data);
                 } else {
-                    await changeCapcha(ctx);
+                    ctx.session!.text = null;
+                    if (response.session !== undefined) {//如果session不为空 就设置session
+                        ctx.session!.data = response.session;
+                    }
                     ctx.body = new ResponseBody<void>(isSuccessful, message);
                 }
             }
@@ -76,7 +78,7 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             let {id} = ctx.request.query;//取出请求的ID
             id = Number(id);
-            const sessionID = (ctx.session.data as ISession).userID;//取出sessionID 判断一下是管理员或者是用户
+            const sessionID = (ctx.session!.data!).userID;//取出sessionID 判断一下是管理员或者是用户
             const res = await serverCheckSupervisorSession(sessionID);
             if (res.body.isSuccessful && res.body.data) {//是超管 可以查任意用户的信息
                 const response = await queryUserInfo(id);
@@ -106,7 +108,7 @@ module.exports = (router: Router<IState, IContext>) => {
         }
     });
     router.post('/api/modifyUserInfo', checkDvSupSession, async (ctx): Promise<void> => {//超管可以修改所有人，其他用户只能修改自己
-        let userID = (ctx.session.data as ISession).userID;//session中取出发起请求用户id
+        let userID = (ctx.session!.data!).userID;//session中取出发起请求用户id
         if (typeof ctx.request.body.ID !== 'number' || (typeof ctx.request.body.password !== 'string' && typeof ctx.request.body.password !== 'undefined') || (typeof ctx.request.body.telephone !== 'string' && typeof ctx.request.body.telephone !== 'undefined') || (typeof ctx.request.body.email !== 'string' && typeof ctx.request.body.email !== 'undefined')) {
             ctx.body = invalidParameter();
         } else {
@@ -135,7 +137,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {offset, limit} = ctx.request.query;
             offset = Number(offset);
             limit = Number(limit);
-            const userID = (ctx.session.data as ISession).userID;
+            const userID = (ctx.session!.data!).userID;
             const result = await listUserInfo(offset, limit, userID);
             const {isSuccessful, message, data} = result.body;
             ctx.body = new ResponseBody<UserInfo[]>(isSuccessful, message, data);
@@ -146,7 +148,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {userType} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await queryUserAmount(userType, userID);
             const {isSuccessful, message, data} = response.body;
             ctx.body = new ResponseBody<number>(isSuccessful, message, data);
@@ -154,9 +156,8 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
 
-    router.get('/api/logout', async (ctx): Promise<void> => {
-        ctx.session.data = null;
-        ctx.session.text = null;
+    router.get('/api/logout', checkDvSupSession,async (ctx): Promise<void> => {
+        ctx.session = null;
         ctx.body = new ResponseBody<void>(true, 'logoutSuccess');
     });
 
@@ -166,7 +167,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchUserInfo(keyword, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;

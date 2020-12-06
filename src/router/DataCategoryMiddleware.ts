@@ -19,7 +19,7 @@ import {
 } from "../server/DataCategoryServer";
 import {DataCategory} from "../Class/DataCategory";
 import is_number from "is-number";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext, IState} from "../interface/session";
 import {utilx} from "../instances/utilx";
 
 
@@ -54,7 +54,7 @@ module.exports = (router: Router<IState, IContext>) => {
                 item = clearedItem;
             })
         }
-        const {userID} = ctx.session.data as ISession;
+        const {userID} = ctx.session!.data!;
         const response = await addDataCategory(dataCategoryName, dataType, userID, selectList);
         const {isSuccessful, message} = response.body;
         ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -64,7 +64,7 @@ module.exports = (router: Router<IState, IContext>) => {
         if (typeof ctx.request.body.dataCategoryID !== 'number' || (typeof ctx.request.body.dataCategoryName !== 'string' && typeof ctx.request.body.dataCategoryName !== 'undefined') || (!isStringArray(ctx.request.body.selectList) && typeof ctx.request.body.selectList !== 'undefined')) {
             ctx.body = new ResponseBody<void>(false, 'invalidParameter')
         } else {
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             let {dataCategoryID, dataCategoryName, selectList} = ctx.request.body;
             let [clearedCategoryName] = utilx.clear(dataCategoryName);
             dataCategoryName = clearedCategoryName;
@@ -85,7 +85,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {dataCategoryID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteDataCategory(dataCategoryID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -97,7 +97,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {dataCategoryID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deletedDataCategoryRecover(dataCategoryID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -111,7 +111,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {limit, offset} = ctx.request.query;
             limit = Number(limit);
             offset = Number(offset);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await listDataCategory(offset, limit, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -130,7 +130,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {limit, offset} = ctx.request.query;
             limit = Number(limit);
             offset = Number(offset);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await listDeletedCategory(offset, limit, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -147,7 +147,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchCategory(keyword, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -164,7 +164,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchDeletedCategory(keyword, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -200,7 +200,7 @@ module.exports = (router: Router<IState, IContext>) => {
         } else {
             let {categoryID} = ctx.request.query;
             categoryID = Number(categoryID);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await queryCategoryOptions(categoryID, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -219,7 +219,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.get("/api/queryDeletedCategoryAmount", checkSupervisorSession, async (ctx) => {
-        const {userID} = ctx.session.data as ISession;
+        const {userID} = ctx.session!.data!;
         const response = await queryDeletedCategoryAmount(userID);
         const {isSuccessful, message, data} = response.body;
         ctx.body = new ResponseBody<number>(isSuccessful, message, data);

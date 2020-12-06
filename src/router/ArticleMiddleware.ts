@@ -22,7 +22,7 @@ import {
     searchArticleInfoOnID,
     queryArticlePicturePath
 } from "../server/ArticleServer";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext, IState} from "../interface/session";
 import {utilx} from "../instances/utilx";
 import {QueryArticle} from "../Class/QueryArticle";
 
@@ -37,7 +37,7 @@ module.exports = (router: Router<IState, IContext>) => {
             const [clearedTitle, clearedContent] = utilx.clear(title, content);
             title = clearedTitle;
             content = clearedContent;
-            const authorID = (ctx.session.data as ISession).userID;
+            const authorID = ctx.session!.data!.userID;
             const response = await addArticle(title, articleType, content, authorID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -45,7 +45,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.post('/api/modifyArticleInfo', checkDvSupSession, async (ctx): Promise<void> => {//超管可以改任何人的文章，其他人只能改自己
-        const sessionUserID = (ctx.session.data as ISession).userID;
+        const sessionUserID = (ctx.session!.data!).userID;
         if (checkType.instancesOfArticleType(ctx.request.body.articleInfo)) {
             ctx.body = invalidParameter();
         } else {
@@ -64,7 +64,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = new ResponseBody(false, 'invalidParameter');
         } else {
             const {articleID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const res = await deleteArticle(articleID, userID);
             const {isSuccessful, message} = res.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -75,7 +75,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {articleID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deletedArticleRecover(articleID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -115,7 +115,7 @@ module.exports = (router: Router<IState, IContext>) => {
         if (!is_number(ctx.request.query.offset) || !is_number(ctx.request.query.limit) || !checkType.instancesOfArticleType(ctx.request.query.articleType)) {
             ctx.body = invalidParameter();
         } else {
-            const {userID} = (ctx.session.data) as ISession;
+            const {userID} = ctx.session!.data!;
             let {offset, limit, articleType} = ctx.request.query;
             offset = Number(offset);
             limit = Number(limit);
@@ -153,7 +153,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword, articleType} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession
+            const {userID} = ctx.session!.data!
             const response = await searchDeletedArticleInfo(keyword, userID, articleType);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -203,7 +203,7 @@ module.exports = (router: Router<IState, IContext>) => {
             offset = Number(offset);
             limit = Number(limit);
             userID = Number(userID);
-            const sessionUserID = (ctx.session.data as ISession).userID;
+            const sessionUserID = (ctx.session!.data!).userID;
             const response = await listArticleOnID(articleType, offset, limit, userID, sessionUserID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -219,7 +219,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {articleType} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await queryDeletedArticleAmount(articleType, userID);
 
             const {isSuccessful, message, data} = response.body;
@@ -234,7 +234,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword, articleType} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession
+            const {userID} = ctx.session!.data!
             const response = await searchArticleInfoOnID(keyword, articleType, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;

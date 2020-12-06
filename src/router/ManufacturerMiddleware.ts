@@ -23,7 +23,7 @@ import {
 } from "../server/ManufacturerServer";
 import {ManufacturerInfo} from "../Class/ManufacturerInfo";
 import is_number from "is-number";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext,  IState} from "../interface/session";
 import {checkType} from "../instances/checkType";
 import {utilx} from "../instances/utilx";
 
@@ -37,7 +37,7 @@ module.exports = (router: Router<IState, IContext>) => {
             if (manufacturerName === undefined || manufacturerTelephone === undefined || manufacturerIntroduction === undefined || manufacturerAddress === undefined) {
                 ctx.body = invalidParameter();
             } else {
-                const {userID} = ctx.session.data as ISession;
+                const {userID} = ctx.session!.data!;
                 const response = await addManufacturer(manufacturerName, manufacturerTelephone, manufacturerIntroduction, manufacturerAddress, userID);
                 const {isSuccessful, message} = response.body;
                 ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -52,7 +52,7 @@ module.exports = (router: Router<IState, IContext>) => {
             if (manufacturerInfo === undefined) {
                 ctx.body = invalidParameter();
             } else {
-                const {userID} = ctx.session.data as ISession;
+                const {userID} = ctx.session!.data!;
                 const response = await modifyManufacturer(manufacturerInfo, userID);
                 const {isSuccessful, message} = response.body;
                 ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -65,7 +65,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {manufacturerID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteManufacturer(manufacturerID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -77,7 +77,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {manufacturerID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deletedManufacturerRecover(manufacturerID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -109,7 +109,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {offset, limit} = ctx.request.query;
             offset = Number(offset);
             limit = Number(limit);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await listDeletedManufacturer(offset, limit, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -129,7 +129,7 @@ module.exports = (router: Router<IState, IContext>) => {
             offset = Number(offset);
             limit = Number(limit);
             userID = Number(userID);
-            const sessionUserID = (ctx.session.data as ISession).userID;
+            const sessionUserID = (ctx.session!.data!).userID;
             const response = await listManufacturerOnID(offset, limit, userID, sessionUserID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -162,7 +162,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchDeletedManufacturer(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -198,7 +198,7 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.get('/api/queryDeletedManufacturerInfoAmount', checkSupervisorSession, async (ctx) => {
-        const {userID} = ctx.session.data as ISession;
+        const {userID} = ctx.session!.data!;
         const response = await queryDeletedManufacturerInfoAmount(userID);
 
         const {isSuccessful, message, data} = response.body;
@@ -223,7 +223,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {manufacturerID} = ctx.request.body;
-            const sessionID = (ctx.session.data as ISession).userID;
+            const sessionID = (ctx.session!.data!).userID;
             const response = await userJoinManufacturer(manufacturerID, sessionID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -235,7 +235,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {manufacturerID} = ctx.request.body;
-            const sessionID = (ctx.session.data as ISession).userID;
+            const sessionID = (ctx.session!.data!).userID;
             const response = await userLeaveManufacturer(manufacturerID, sessionID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -248,7 +248,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchManufacturerOnID(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -265,7 +265,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchManufacturerNotJoin(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;

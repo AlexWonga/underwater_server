@@ -42,7 +42,7 @@ import {ResponseBody} from "../instances/ResponseBody";
 import {Device} from "../Class/Device";
 import {utilx} from "../instances/utilx";
 import {DeviceInfo} from "../interface/DeviceInfo";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext,  IState} from "../interface/session";
 import {PictureInfo} from "../Class/PictureInfo";
 import {AttachmentInfo} from "../Class/AttachmentInfo";
 
@@ -53,7 +53,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceName, manufacturerID, deviceDataList, deviceAdminID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await supervisorAddDevice(deviceName, manufacturerID, userID, deviceAdminID, deviceDataList);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -70,7 +70,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceName, manufacturerID, deviceDataList} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deviceAdminAddDevice(deviceName, manufacturerID, userID, deviceDataList);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -87,7 +87,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, deviceName, manufacturerID, deviceDataList, deviceAdminID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await supervisorModifyDevice(deviceID, userID, deviceName, manufacturerID, deviceDataList, deviceAdminID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -99,7 +99,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, deviceName, manufacturerID, deviceDataList} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deviceAdminModifyDevice(deviceID, userID, deviceName, manufacturerID, deviceDataList);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -111,7 +111,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteDevice(deviceID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -123,7 +123,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deletedDeviceRecover(deviceID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
@@ -155,7 +155,7 @@ module.exports = (router: Router<IState, IContext>) => {
             let {offset, limit} = ctx.request.query;
             offset = Number(offset);
             limit = Number(limit);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await listDeletedDevice(offset, limit, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -188,7 +188,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchDeletedDevice(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -206,7 +206,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {keyword} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await searchDeviceOnID(keyword, userID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -246,7 +246,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await checkDevicePicture(deviceID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
@@ -261,7 +261,7 @@ module.exports = (router: Router<IState, IContext>) => {
             deviceID = Number(deviceID);
             if (ctx.request.files !== undefined) {
                 const {files} = ctx.request.files;
-                const {userID} = ctx.session.data as ISession
+                const {userID} = ctx.session!.data!
                 //@ts-ignore
                 const response = await addDevicePicture(deviceID, files, userID);
                 const {isSuccessful, message} = response.body;
@@ -277,7 +277,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, pictureID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await selectDeviceCover(deviceID, pictureID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -325,7 +325,7 @@ module.exports = (router: Router<IState, IContext>) => {
                 return;
             }
             deviceID = Number(deviceID);
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await checkDeviceAttachment(deviceID, fileNames, userID, fileSizes);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody(isSuccessful, message);
@@ -341,7 +341,7 @@ module.exports = (router: Router<IState, IContext>) => {
                 let {deviceID} = ctx.request.body;
                 deviceID = Number(deviceID);
                 const {files} = ctx.request.files;
-                const {userID} = ctx.session.data as ISession;
+                const {userID} = ctx.session!.data!;
                 const response = await addDeviceAttachment(deviceID, files, userID);
                 const {isSuccessful, message} = response.body;
                 ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -356,7 +356,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, pictureID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteDevicePicture(deviceID, pictureID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -368,7 +368,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, fileID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteDeviceAttachment(deviceID, fileID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -383,7 +383,7 @@ module.exports = (router: Router<IState, IContext>) => {
                 let {deviceID} = ctx.request.body;
                 deviceID = Number(deviceID);
                 const {files} = ctx.request.files;
-                const {userID} = ctx.session.data as ISession;
+                const {userID} = ctx.session!.data!;
                 //@ts-ignore
                 const response = await addDeviceStereoPicture(deviceID, files, userID);
                 const {isSuccessful, message} = response.body;
@@ -416,7 +416,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID} = ctx.request.body;
-            const {userID} = await ctx.session.data as ISession;
+            const {userID} = await ctx.session!.data!;
             const response = await deletedDeviceStereoPicture(deviceID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -428,7 +428,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {deviceID} = ctx.request.query;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await queryUpdateStatus(deviceID, userID);
             if (response.body.isSuccessful && response.body.data) {
                 const {isSuccessful, message, data} = response.body;
@@ -469,7 +469,7 @@ module.exports = (router: Router<IState, IContext>) => {
             offset = Number(offset);
             limit = Number(limit);
             userID = Number(userID);
-            const sessionUserID = (ctx.session.data as ISession).userID;
+            const sessionUserID = (ctx.session!.data!).userID;
             const response = await listDeviceOnID(offset, limit, userID, sessionUserID);
             if (response.body.data && response.body.isSuccessful) {
                 const {isSuccessful, message, data} = response.body;
@@ -482,14 +482,14 @@ module.exports = (router: Router<IState, IContext>) => {
     });
 
     router.get("/api/queryDeviceAmountOnID", checkDvSupSession, async (ctx) => {
-        const {userID} = ctx.session.data as ISession;
+        const {userID} = ctx.session!.data!;
         const response = await queryDeviceAmountOnID(userID);
         const {isSuccessful, message, data} = response.body;
         ctx.body = new ResponseBody<number>(isSuccessful, message, data);
     });
 
     router.get('/api/queryDeletedDeviceAmount', checkSupervisorSession, async (ctx) => {
-        const {userID} = ctx.session.data as ISession;
+        const {userID} = ctx.session!.data!;
         const response = await queryDeletedDeviceAmount(userID);
         const {isSuccessful, message, data} = response.body;
         ctx.body = new ResponseBody<number>(isSuccessful, message, data);
@@ -522,7 +522,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID, dataCategoryID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await deleteDeviceData(deviceID, dataCategoryID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -534,7 +534,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {deviceID, fileNames, fileSizes} = ctx.request.body;
-            let {userID} = ctx.session.data as ISession;
+            let {userID} = ctx.session!.data!;
             const response = await checkDeviceStereoPicture(deviceID, fileNames, fileSizes, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);
@@ -546,7 +546,7 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             const {deviceID} = ctx.request.body;
-            const {userID} = ctx.session.data as ISession
+            const {userID} = ctx.session!.data!
             const response = await destroyDevice(deviceID, userID);
             const {isSuccessful, message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful, message);

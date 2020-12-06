@@ -2,7 +2,7 @@ import {ResponseBody} from "../instances/ResponseBody";
 import Router from 'koa-router';
 import {invalidParameter} from "./invalidParameter";
 import {deleteTwoDimensionalData, uploadTwoDimensionalData} from "../server/TwoDimensionalServer";
-import {IContext, ISession, IState} from "../interface/session";
+import {IContext,  IState} from "../interface/session";
 import {checkDvSupSession} from "./checkPermissionMiddleware";
 import is_number from "is-number";
 // import send from "koa-send";
@@ -17,7 +17,7 @@ module.exports = (router: Router<IContext, IState>) => {
             let {deviceID,categoryID} = ctx.request.body;
             deviceID = Number(deviceID);categoryID = Number(categoryID);
             const {xlsxFile} = ctx.request.files;
-            const {userID} = ctx.session.data as ISession;
+            const {userID} = ctx.session!.data!;
             const response = await uploadTwoDimensionalData(xlsxFile,deviceID,categoryID,userID);
             const {isSuccessful,message} = response.body;
             ctx.body = new ResponseBody<void>(isSuccessful,message);

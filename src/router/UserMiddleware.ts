@@ -13,14 +13,14 @@ module.exports = (router: Router<IState, IContext>) => {
             ctx.body = invalidParameter();
         } else {
             let {username, password, code} = ctx.request.body;//从请求中取出用户名与密码
-            const text = ctx.session.text;
+            const text = ctx.session!.text;
             if (text === null || text.toLowerCase() !== code.toString().toLowerCase()) {
                 const svgData = await changeCapcha(ctx);
                 ctx.body = new ResponseBody<string>(false, 'wrongVerificationCode', svgData);
             } else {
                 const response = await userLogin(username, password);//服务层返回的response
                 if (response.session) {//如果session不为空 就设置session
-                    ctx.session.data = response.session;
+                    ctx.session!.data = response.session;
                 }
                 const {isSuccessful, message} = response.body;
                 if (!isSuccessful) {

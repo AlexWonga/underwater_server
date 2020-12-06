@@ -17,9 +17,8 @@ const app = new Koa();
 //import koaBodyOptions from "./config/koaBodyConfig";
 
 
-
 app.use(compress({
-    filter (content_type) {
+    filter(content_type) {
         return /text/i.test(content_type)
     },
     threshold: 1024, //bytes
@@ -49,8 +48,8 @@ app.keys = ['secret key'];
 
 app.use(koaSession({
     key: 'koa:sess',
-    renew: true,
-    rolling: false,
+    rolling: true,
+    httpOnly: true
 }, app));
 
 const staticPath = 'files';
