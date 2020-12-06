@@ -17,7 +17,7 @@ client.on("error", function (err) {
 const rateLimiter = new RateLimiterRedis({
     storeClient: client,
     keyPrefix: 'middleware',
-    points: 100, // 10 requests for ctx.ip
+    points: 10, // 10 requests for ctx.ip
     duration: 1, // per 1 second
 });
 

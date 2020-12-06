@@ -9,7 +9,7 @@ import compress from "koa-compress";
 import {logErr} from "./router/LogError";
 import {maxFileSize} from "./config/maxFileSize";
 import {rootDirPath} from "./config/filePaths";
-//import {rateLimiterMiddleware} from "./router/rateLimiter";
+import {rateLimiterMiddleware} from "./router/rateLimiter";
 
 
 const app = new Koa();
@@ -59,7 +59,7 @@ app.use(serve(
 ));
 
 app.use(logErr);
-//app.use(rateLimiterMiddleware);
+app.use(rateLimiterMiddleware);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
