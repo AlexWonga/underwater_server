@@ -1,5 +1,5 @@
 import redis from "redis";
-import {RateLimiterRedis} from "rate-limiter-flexible";
+import {RateLimiterMemory} from "rate-limiter-flexible";
 import {ParameterizedContext} from "koa";
 import {IContext, IState} from "../interface/session";
 
@@ -14,11 +14,11 @@ client.on("error", function (err) {
     console.log("Redis error encountered", err);
 });
 
-const rateLimiter = new RateLimiterRedis({
-    storeClient: client,
+const rateLimiter = new RateLimiterMemory({
+
     keyPrefix: 'middleware',
     points: 20,
-    duration: 10,
+    duration: 60,
     blockDuration: 60 * 60,
 });
 
