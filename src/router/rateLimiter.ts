@@ -17,8 +17,9 @@ client.on("error", function (err) {
 const rateLimiter = new RateLimiterRedis({
     storeClient: client,
     keyPrefix: 'middleware',
-    points: 20, // 10 requests for ctx.ip
-    duration: 1, // per 1 second
+    points: 20,
+    duration: 10,
+    blockDuration: 60 * 60,
 });
 
 export async function rateLimiterMiddleware(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {
