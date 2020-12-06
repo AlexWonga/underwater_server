@@ -16,8 +16,8 @@ import {IContext, IState} from "../interface/session";
 
 const rateLimiter = new RateLimiterMemory({
     keyPrefix: 'middleware',
-    points: 20,
-    duration: 60,
+    points: 10,
+    duration: 1,
     blockDuration: 60 * 60,
 });
 

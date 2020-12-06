@@ -9,7 +9,9 @@ import compress from "koa-compress";
 import {logErr} from "./router/LogError";
 import {maxFileSize} from "./config/maxFileSize";
 import {rootDirPath} from "./config/filePaths";
-// import {rateLimiterMiddleware} from "./router/rateLimiter";
+import redisStore from "koa-redis";
+
+
 
 
 const app = new Koa();
@@ -49,7 +51,10 @@ app.keys = ['secret key'];
 app.use(koaSession({
     key: 'koa:sess',
     rolling: true,
-    httpOnly: true
+    httpOnly: true,
+    store: redisStore({
+
+    })
 }, app));
 
 const staticPath = 'files';
