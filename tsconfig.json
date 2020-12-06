@@ -14,7 +14,6 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "strict": true,
-    "allowJs": true,
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
