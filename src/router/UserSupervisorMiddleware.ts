@@ -23,6 +23,7 @@ import {UserInfo} from "../Class/UserInfo";
 import is_number from "is-number";
 import {IContext,  IState} from "../interface/session";
 import {changeCapcha} from "./createCapcha";
+import {rateLimiterMiddleware} from "./rateLimiter";
 
 module.exports = (router: Router<IState, IContext>) => {
     router.get('/api/captcha', async (ctx) => {
@@ -30,7 +31,7 @@ module.exports = (router: Router<IState, IContext>) => {
         ctx.body = {svgData: data};
     });
 
-    router.post('/api/supervisorLogin', checkSessionText, async (ctx): Promise<void> => {//超管登陆
+    router.post('/api/supervisorLogin', rateLimiterMiddleware, checkSessionText, async (ctx): Promise<void> => {//超管登陆
         if (typeof (ctx.request.body.username) !== "string" || typeof (ctx.request.body.password) !== "string" || typeof (ctx.request.body.code) !== "string") {//检查参数类型 code是图形验证码的答案
             ctx.body = invalidParameter();
         } else {

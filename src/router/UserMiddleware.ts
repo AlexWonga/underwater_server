@@ -5,10 +5,11 @@ import {invalidParameter} from "./invalidParameter";
 import {IContext, IState} from "../interface/session";
 import {checkSessionText} from "./checkPermissionMiddleware";
 import {changeCapcha} from "./createCapcha";
+import {rateLimiterMiddleware} from "./rateLimiter";
 
 
 module.exports = (router: Router<IState, IContext>) => {
-    router.post('/api/userLogin', checkSessionText, async (ctx): Promise<void> => {//普通用户和机器人管理员登陆
+    router.post('/api/userLogin', rateLimiterMiddleware,checkSessionText, async (ctx): Promise<void> => {//普通用户和机器人管理员登陆
         if (typeof (ctx.request.body.username) !== "string" || typeof (ctx.request.body.password) !== "string" || typeof (ctx.request.body.code) !== "string") {//检查参数类型 code是图形验证码的答案
             ctx.body = invalidParameter();
         } else {
