@@ -12,8 +12,6 @@ import {rootDirPath} from "./config/filePaths";
 import redisStore from "koa-redis";
 
 
-
-
 const app = new Koa();
 //import SessionConfig from "./config/SessionConfig";
 //import koaBodyOptions from "./config/koaBodyConfig";
@@ -53,7 +51,8 @@ app.use(koaSession({
     rolling: true,
     httpOnly: true,
     store: redisStore({
-
+        host: "127.0.0.1",
+        port: 6379,
     })
 }, app));
 
