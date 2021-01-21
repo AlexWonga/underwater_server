@@ -21,7 +21,8 @@
     "allowSyntheticDefaultImports": true
   },
   "typeRoots": [
-    "node_modules/@types"
+    "node_modules/koa-body",
+    "node_modules/@types",
   ],
   "include": [
     "src/**/*"
