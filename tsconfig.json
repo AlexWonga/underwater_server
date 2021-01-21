@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "types": [
-      "koa-body",
-    ],
     "esModuleInterop": true,
     "module": "commonjs",
     "outDir": "./dist",

@@ -1,10 +1,10 @@
 import {checkSupervisorSession as serverCheckSupervisorSession} from "../server/checkPermission";
 import {ResponseBody} from "../instances/ResponseBody";
-import {ParameterizedContext} from 'koa';
+import {ExtendableContext} from 'koa';
 import {checkDvSupSession as checkDvSupSessionServer} from "../server/checkPermission";
-import {IContext, IState} from "../interface/session";
+// import {IContext, IState} from "../interface/session";
 
-export async function checkSupervisorSession(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {
+export async function checkSupervisorSession(ctx:ExtendableContext, next:Function) {
     if (ctx.session === null) {//先检测session是否为空
         ctx.body = new ResponseBody(false, 'invalidCall');
     } else {
@@ -39,7 +39,7 @@ export async function checkSupervisorSession(ctx: ParameterizedContext<IState, I
     }
 }*/
 
-export async function checkDvSupSession(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//查超管和机器人管理员session 普通用户不可以
+export async function checkDvSupSession(ctx: ExtendableContext, next: Function): Promise<void> {//查超管和机器人管理员session 普通用户不可以
     if (ctx.session === null) {//先检测session是否为空
         ctx.body = new ResponseBody<void>(false, 'invalidCall');
     } else {
@@ -58,7 +58,7 @@ export async function checkDvSupSession(ctx: ParameterizedContext<IState, IConte
     }
 }
 
-export async function checkSessionText(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {//检查是否存在session 以及 session中是否含有text
+export async function checkSessionText(ctx: ExtendableContext, next: Function): Promise<void> {//检查是否存在session 以及 session中是否含有text
     if (ctx.session === null || !ctx.session.text || ctx.session.isNew) {//先检测session是否为空
         ctx.body = new ResponseBody(false, 'invalidCall');
     } else {

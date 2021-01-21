@@ -1,7 +1,7 @@
 // import redis from "redis";
 import {RateLimiterMemory} from "rate-limiter-flexible";
-import {ParameterizedContext} from "koa";
-import {IContext, IState} from "../interface/session";
+import {ExtendableContext } from "koa";
+// import {IContext, IState} from "../interface/session";
 
 
 // export const client = redis.createClient({
@@ -21,7 +21,7 @@ const rateLimiter = new RateLimiterMemory({
     blockDuration: 60 * 60,
 });
 
-export async function rateLimiterMiddleware(ctx: ParameterizedContext<IState, IContext>, next: Function): Promise<void> {
+export async function rateLimiterMiddleware(ctx: ExtendableContext, next: Function): Promise<void> {
     try {
         await rateLimiter.consume(ctx.ip);
         await next();
