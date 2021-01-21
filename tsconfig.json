@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "types": [
-      "koa-body",
-      "jest"
-    ],
     "esModuleInterop": true,
     "module": "commonjs",
     "outDir": "./dist",
@@ -21,10 +17,14 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true
   },
+  "typeRoots": [
+    "node_modules/@types"
+  ],
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test",
   ]
 }
