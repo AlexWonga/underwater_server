@@ -1,20 +1,20 @@
 import Koa from "koa"
 import koaBody from "koa-body";
 import * as path from "path";
-import {router} from "./router";
+import {router} from "./Router";
 import koaSession from "koa-session";
 import serve from "koa-static";
 import helmet from "koa-helmet";
 import compress from "koa-compress";
-import {logErr} from "./router/LogError";
-import {maxFileSize} from "./config/maxFileSize";
-import {rootDirPath} from "./config/filePaths";
+import {logErr} from "./Router/UtilMiddleware/LogError";
+import {maxFileSize} from "./Config/maxFileSize";
+import {rootDirPath} from "./Config/FilePaths";
 import redisStore from "koa-redis";
 
 
 const app = new Koa();
-//import SessionConfig from "./config/SessionConfig";
-//import koaBodyOptions from "./config/koaBodyConfig";
+//import SessionConfig from "./Config/SessionConfig";
+//import koaBodyOptions from "./Config/koaBodyConfig";
 
 
 app.use(compress({
@@ -69,6 +69,6 @@ app.use(router.allowedMethods());
 
 
 export default app.listen(8000, function () {
-    console.log('server is running in port 8000');
+    console.log('Server is running in port 8000');
 });
 
